@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Algum Creations Billing 2026</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+body{
+  font-family:'Segoe UI',sans-serif;
+  margin:0;
+  padding:20px;
+  background:linear-gradient(135deg,#1e1e2f,#2b1055);
+  color:white;
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  background:#111827;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 0 40px rgba(255,215,0,0.3);
+}
+
+.brand{text-align:center;margin-bottom:20px;}
+.brand h1{
+  margin:0;
+  font-size:32px;
+  background:linear-gradient(45deg,gold,#ffcc00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.brand p{color:#ccc;}
+
+input, select{
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  font-size:14px;
+  margin-bottom:10px;
+  background:#1f2937;
+  color:white;
+}
+
+button{
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+  margin-top:10px;
+  transition:0.3s;
+}
+
+.primary{background:linear-gradient(45deg,#ff9800,#ff5722);color:white;}
+.secondary{background:linear-gradient(45deg,#25D366,#128C7E);}
+.download{background:linear-gradient(45deg,#2196f3,#3f51b5);}
+.thermal{background:linear-gradient(45deg,#ff00cc,#3333ff);}
+button:hover{transform:scale(1.05);}
+
+.itemRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+
+.invoice{
+  background:white;
+  color:black;
+  padding:25px;
+  border-radius:15px;
+  position:relative;
+}
+
+.statusBadge{
+  position:absolute;
+  top:20px;
+  right:20px;
+  padding:8px 15px;
+  border-radius:20px;
+  font-weight:bold;
+  color:white;
+}
+
+.paid{ background:green; }
+.due{ background:red; }
+
+.invoice table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+.invoice th{
+  background:#111827;
+  color:white;
+}
+
+.invoice th, .invoice td{
+  padding:10px;
+  border:1px solid #ddd;
+  text-align:center;
+}
+
+.totalBox{
+  margin-top:15px;
+  text-align:right;
+  font-weight:bold;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="brand">
+<h1>ALGUM CREATIONS</h1>
+<p>Creative Design • Branding • Digital Solutions</p>
+</div>
+
+<input type="text" id="customer" placeholder="Client Name" style="width:100%;">
+<input type="tel" id="mobile" value="+91" style="width:100%;">
+
+<div id="items"></div>
+
+<button class="primary" onclick="addRow()">+ Add Service</button>
+
+<br><br>
+
+<input type="number" id="discount" placeholder="Discount Amount ₹" style="width:200px;">
+
+<br><br>
+
+<select id="paymentMode">
+<option value="Online">Online</option>
+<option value="Cash">Cash</option>
+</select>
+
+<input type="number" id="paidAmount" placeholder="Paid Amount ₹">
+
+<br><br>
+
+<button class="primary" onclick="createBill()">Generate Invoice</button>
+
+<div id="billPreview" style="margin-top:30px;"></div>
+
+<div id="afterButtons" style="display:none;">
+<button class="download" onclick="downloadBill()">Download</button>
+<button class="secondary" onclick="shareWhatsApp()">WhatsApp</button>
+<button class="thermal" onclick="window.print()">Print</button>
+</div>
+
+</div>
+
+<script>
+
+const services=[
+{name:"Single Page Poster",price:349},
+{name:"Signature Poster Design",price:499},
+{name:"Duo Poster Pack (2 Designs)",price:649},
+{name:"Trio Poster Pack (3 Designs)",price:949},
+{name:"Ultimate Poster Pack (4 Designs)",price:1199},
+{name:"Classic Single Page Invitation",price:499},
+{name:"Luxury Single Page Invitation",price:649},
+{name:"Grand 4-Page Wedding Invitation",price:999},
+{name:"Additional Page (Add-On)",price:299},
+{name:"Essential Logo Design",price:999},
+{name:"Elite Logo Design",price:1299},
+{name:"Single Page Menu Design",price:549},
+{name:"Double Page Menu Design",price:849},
+{name:"Banner / Flex Designing (Per Feet)",price:49},
+{name:"Social Media Post Design",price:249}
+];
+
+function addRow(){
+  let div=document.createElement("div");
+  div.className="itemRow";
+
+  let options="";
+  services.forEach((service,index)=>{
+    options+=`<option value="${index}">${service.name} - ₹${service.price}</option>`;
+  });
+
+  div.innerHTML=`
+    <select class="serviceSelect">${options}</select>
+    <input type="number" class="qty" value="1" min="1">
+  `;
+
+  document.getElementById("items").appendChild(div);
+}
+addRow();
+
+
+function createBill(){
+
+  let customer=document.getElementById("customer").value || "N/A";
+  let mobile=document.getElementById("mobile").value || "N/A";
+  let paymentMode=document.getElementById("paymentMode").value;
+  let paid=parseFloat(document.getElementById("paidAmount").value)||0;
+  let discount=parseFloat(document.getElementById("discount").value)||0;
+
+  let rows=document.querySelectorAll(".itemRow");
+
+  let subtotal=0;
+
+  let tableHTML="<table>";
+  tableHTML+="<tr><th>Service</th><th>Qty</th><th>Price</th><th>Total</th></tr>";
+
+  rows.forEach(row=>{
+    let serviceIndex=row.querySelector(".serviceSelect").value;
+    let service=services[serviceIndex];
+    let qty=parseFloat(row.querySelector(".qty").value)||1;
+
+    let amount=service.price*qty;
+    subtotal+=amount;
+
+    tableHTML+="<tr>";
+    tableHTML+="<td>"+service.name+"</td>";
+    tableHTML+="<td>"+qty+"</td>";
+    tableHTML+="<td>₹"+service.price+"</td>";
+    tableHTML+="<td>₹"+amount+"</td>";
+    tableHTML+="</tr>";
+  });
+
+  tableHTML+="</table>";
+
+  let total=subtotal-discount;
+  let balance=total-paid;
+  let status=balance>0?"DUE":"PAID";
+
+  let date=new Date().toLocaleDateString();
+  let invoiceNo="AC-"+Date.now().toString().slice(-6);
+
+  let billHTML=`
+  <div id="finalBill" class="invoice">
+    <div class="statusBadge ${status==="PAID"?"paid":"due"}">${status}</div>
+    <h2 style="text-align:center;">ALGUM CREATIONS</h2>
+    <p style="text-align:center;">Professional Graphic Design Invoice</p>
+    <hr>
+    <p><strong>Invoice No:</strong> ${invoiceNo}</p>
+    <p><strong>Date:</strong> ${date}</p>
+    <p><strong>Client:</strong> ${customer}</p>
+    <p><strong>Mobile:</strong> ${mobile}</p>
+    <p><strong>Payment Mode:</strong> ${paymentMode}</p>
+    ${tableHTML}
+    <div class="totalBox">
+      Subtotal: ₹${subtotal.toFixed(2)}<br>
+      Discount: ₹${discount.toFixed(2)}<br>
+      Grand Total: ₹${total.toFixed(2)}<br>
+      Paid: ₹${paid.toFixed(2)}<br>
+      Balance: ₹${balance.toFixed(2)}
+    </div>
+  </div>`;
+
+  document.getElementById("billPreview").innerHTML=billHTML;
+  document.getElementById("afterButtons").style.display="block";
+
+  window.billData={customer,mobile,total,status};
+}
+
+
+function downloadBill(){
+  html2canvas(document.getElementById("finalBill")).then(canvas=>{
+    let link=document.createElement("a");
+    link.download="Algum_Creations_Invoice.png";
+    link.href=canvas.toDataURL();
+    link.click();
+  });
+}
+
+
+function shareWhatsApp(){
+  let data=window.billData;
+  if(!data){ alert("Generate Invoice First"); return; }
+
+  let mobile=data.mobile.replace(/\D/g,"");
+  if(mobile.length===10){ mobile="91"+mobile; }
+
+  let message=
+`ALGUM CREATIONS
+Professional Invoice
+
+Client: ${data.customer}
+Status: ${data.status}
+Total: ₹${data.total}
+`;
+
+  window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
+}
+
+</script>
+
+</body>
+  </html>
