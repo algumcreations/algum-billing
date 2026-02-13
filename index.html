@@ -218,11 +218,12 @@ function generateAdvanceQR(){
 
   let receiptHTML=`
   <div class="invoice">
-    <h3 style="text-align:center;">ADVANCE PAYMENT REQUEST</h3>
+    <h3 style="text-align:center;">ADVANCE/DUE PAYMENT REQUEST</h3>
     <hr>
     <p><strong>Customer:</strong> ${customer}</p>
-    <p><strong>Advance Payment:</strong> ₹${amount}</p>
+    <p><strong>Advance/Due Payment:</strong> ₹${amount}</p>
     <p><strong>Date:</strong> ${date}</p>
+    <p><strong>For More Detaisl Check Invoice</p>
     <div id="advanceQR" style="margin-top:15px;"></div>
     <br>
     <button class="secondary" onclick="shareAdvanceWhatsApp()">Share on WhatsApp</button>
@@ -244,7 +245,7 @@ function shareAdvanceWhatsApp(){
   let message=
 `ALGUM CREATIONS
 
-ADVANCE PAYMENT REQUEST
+ADVANCE/DUE PAYMENT REQUEST
 
 Client: ${document.getElementById("customer").value}
 Amount: ₹${amount}
@@ -303,7 +304,7 @@ function createBill(){
   <div id="finalBill" class="invoice">
     <div class="statusBadge ${status==="PAID"?"paid":"due"}">${status}</div>
     <h2 style="text-align:center;">ALGUM CREATIONS</h2>
-    <p style="text-align:center;">Professional Graphic Design Invoice</p>
+    <p style="text-align:center;">Didital Branding Studio</p>
     <hr>
     <p><strong>Invoice No:</strong> ${invoiceNo}</p>
     <p><strong>Date:</strong> ${date}</p>
@@ -344,11 +345,13 @@ function shareWhatsApp(){
 
   let message=
 `ALGUM CREATIONS
-Professional Invoice
+Digital Branding Studio 
 
 Client: ${data.customer}
 Status: ${data.status}
 Total: ₹${data.total}
+
+THANKS FOR CHOSSING US❤️
 `;
 
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
