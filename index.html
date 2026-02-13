@@ -56,7 +56,18 @@ button{
 .thermal{background:linear-gradient(45deg,#ff00cc,#3333ff);}
 .advanceBtn{background:linear-gradient(45deg,#00c6ff,#0072ff);}
 button:hover{transform:scale(1.05);}
-.itemRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+.itemRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center;}
+.removeBtn{
+  background:red;
+  color:white;
+  border:none;
+  border-radius:50%;
+  width:25px;
+  height:25px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:16px;
+}
 .invoice{
   background:white;
   color:black;
@@ -97,6 +108,20 @@ button:hover{transform:scale(1.05);}
   font-weight:bold;
   font-size:16px;
 }
+#totalPreview{
+  font-weight:bold;
+  margin:10px 0;
+  font-size:18px;
+}
+.clientPopup{
+  background:#222;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+.clientPopup p{
+  margin:3px 0;
+}
 </style>
 </head>
 
@@ -114,12 +139,13 @@ button:hover{transform:scale(1.05);}
 
 <button class="primary" onclick="fetchClient()">Fetch Client</button>
 
-<div id="items"></div>
+<div id="clientDetails"></div>
 
+<div id="items"></div>
+<div id="totalPreview">Total: ₹0</div>
 <button class="primary" onclick="addRow()">+ Add Service</button>
 
 <br><br>
-
 <input type="number" id="discount" placeholder="Discount Amount ₹" style="width:200px;">
 <br><br>
 
@@ -149,7 +175,6 @@ button:hover{transform:scale(1.05);}
 </div>
 
 <script>
-
 const UPI_ID="tinu01jmp@okhdfcbank";
 let advanceUpiLink="";
 let billUpiLink="";
@@ -173,6 +198,7 @@ const services=[
 {name:"Social Media Post Design",price:249}
 ];
 
+// --- ADD SERVICE ROW WITH REMOVE BUTTON ---
 function addRow(){
   let div=document.createElement("div");
   div.className="itemRow";
@@ -185,13 +211,37 @@ function addRow(){
   div.innerHTML=`
     <select class="serviceSelect">${options}</select>
     <input type="number" class="qty" value="1" min="1">
+    <button class="removeBtn" onclick="removeRow(this)">×</button>
   `;
-
   document.getElementById("items").appendChild(div);
+  updateTotal();
 }
-addRow();
 
-/* --- FETCH CLIENT FROM SHEETS --- */
+// --- REMOVE SERVICE ROW ---
+function removeRow(btn){
+  btn.parentElement.remove();
+  updateTotal();
+}
+
+// --- UPDATE TOTAL ---
+function updateTotal(){
+  let total=0;
+  document.querySelectorAll(".itemRow").forEach(row=>{
+    let idx=row.querySelector(".serviceSelect").value;
+    let qty=parseFloat(row.querySelector(".qty").value)||1;
+    total+=services[idx].price*qty;
+  });
+  document.getElementById("totalPreview").innerText="Total: ₹"+total.toFixed(2);
+}
+document.addEventListener("input", e=>{
+  if(e.target.classList.contains("qty") || e.target.classList.contains("serviceSelect")){
+    updateTotal();
+  }
+});
+
+addRow(); // initial row
+
+// --- FETCH CLIENT DETAILS ---
 async function fetchClient(){
   let phone=document.getElementById("mobile").value.replace(/\D/g,"");
   if(phone.length===10) phone="91"+phone;
@@ -203,11 +253,20 @@ async function fetchClient(){
     });
     const data=await res.json();
 
+    let popup=document.getElementById("clientDetails");
+    popup.innerHTML="";
     if(data.found){
+      popup.innerHTML=`
+      <div class="clientPopup">
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Total Bill:</strong> ₹${data.totalBill}</p>
+        <p><strong>Total Paid:</strong> ₹${data.totalPaid}</p>
+        <p><strong>Total Due:</strong> ₹${data.totalDue}</p>
+        <p><strong>Last Updated:</strong> ${data.lastUpdated||"N/A"}</p>
+      </div>`;
       document.getElementById("customer").value=data.name;
-      alert(`Client found! Total Due: ₹${data.totalDue}`);
     }else{
-      alert("Client not found, you can add new.");
+      popup.innerHTML=`<p>Client not found, you can add new.</p>`;
     }
   }catch(err){
     console.error(err);
@@ -215,11 +274,10 @@ async function fetchClient(){
   }
 }
 
-/* --- ADVANCE / FULL PAYMENT QR --- */
+// --- ADVANCE / FULL PAYMENT QR ---
 function generateAdvanceQR(type){
   let customer=document.getElementById("customer").value || "N/A";
   let rows=document.querySelectorAll(".itemRow");
-
   let subtotal=0;
   rows.forEach(row=>{
     let serviceIndex=row.querySelector(".serviceSelect").value;
@@ -227,14 +285,12 @@ function generateAdvanceQR(type){
     let qty=parseFloat(row.querySelector(".qty").value)||1;
     subtotal+=service.price*qty;
   });
-
   let amount=0,title="";
   if(type==="full"){ amount=subtotal; title="FULL PAYMENT REQUEST"; }
   else{ amount=parseFloat(document.getElementById("advanceAmount").value)||0; if(amount<=0){ alert("Enter Advance"); return; } title="ADVANCE PAYMENT REQUEST"; }
 
   advanceUpiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${amount.toFixed(2)}&cu=INR`;
   let date=new Date().toLocaleDateString();
-
   let receiptHTML=`
   <div class="invoice">
     <h3 style="text-align:center;">${title}</h3>
@@ -257,7 +313,7 @@ function shareAdvanceWhatsApp(amount,title){
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
 }
 
-/* --- CREATE BILL AND POST TO SHEET --- */
+// --- CREATE BILL AND POST TO SHEET ---
 async function createBill(){
   let customer=document.getElementById("customer").value || "N/A";
   let mobile=document.getElementById("mobile").value.replace(/\D/g,"")||"N/A";
@@ -309,7 +365,6 @@ async function createBill(){
     </div>
     ${balance>0?`<div style="margin-top:20px;text-align:center;"><h3>Scan to Pay ₹${balance.toFixed(2)}</h3><div id="billQR"></div></div>`:""}
   </div>`;
-
   document.getElementById("billPreview").innerHTML=billHTML;
   document.getElementById("afterButtons").style.display="block";
 
@@ -327,9 +382,8 @@ async function createBill(){
       body:JSON.stringify({action:"addBill",phone:mobile,name:customer,amount:total})
     });
     const data=await res.json();
-    if(data.success) console.log("Bill added to sheet ✅");
+    if(data.success) console.log("Bill added ✅");
     else console.warn("Failed to add bill");
-    // Add payment if paid>0
     if(paid>0){
       const payRes=await fetch(SHEET_API,{
         method:'POST',
@@ -355,11 +409,9 @@ function shareWhatsApp(){
   if(!data){ alert("Generate Invoice First"); return; }
   let mobile=data.mobile.replace(/\D/g,"");
   if(mobile.length===10) mobile="91"+mobile;
-
   let message=`*ALGUM CREATIONS*\nInvoice Status: ${data.status}\nTotal: ₹${data.total}\n${data.status!=="PAID"?"Payment Link:\n"+billUpiLink+"\n":""}`;
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
 }
-
 </script>
 </body>
 </html>
