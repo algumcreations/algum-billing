@@ -5,8 +5,11 @@
 <title>Algum Creations Billing 2026</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
+/* ✅ YOUR ORIGINAL CSS UNTOUCHED */
 body{
   font-family:'Segoe UI',sans-serif;
   margin:0;
@@ -145,7 +148,8 @@ button:hover{transform:scale(1.05);}
 <div id="billPreview" style="margin-top:30px;"></div>
 
 <div id="afterButtons" style="display:none;">
-<button class="download" onclick="downloadBill()">Download</button>
+<button class="download" onclick="downloadBill()">Download PNG</button>
+<button class="download" onclick="downloadPDF()">Download PDF</button>
 <button class="secondary" onclick="shareWhatsApp()">WhatsApp</button>
 <button class="thermal" onclick="window.print()">Print</button>
 </div>
@@ -154,22 +158,25 @@ button:hover{transform:scale(1.05);}
 
 <script>
 
+const UPI_ID="tinu01jmp@okhdfcbank";
+let upiLink="";
+
 const services=[
-{name:"Single Page Poster",price:349},
-{name:"Signature Poster Design",price:499},
-{name:"Duo Poster Pack (2 Designs)",price:649},
-{name:"Trio Poster Pack (3 Designs)",price:949},
-{name:"Ultimate Poster Pack (4 Designs)",price:1199},
-{name:"Classic Single Page Invitation",price:499},
-{name:"Luxury Single Page Invitation",price:649},
-{name:"Grand 4-Page Wedding Invitation",price:999},
-{name:"Additional Page (Add-On)",price:299},
-{name:"Essential Logo Design",price:999},
-{name:"Elite Logo Design",price:1299},
-{name:"Single Page Menu Design",price:549},
-{name:"Double Page Menu Design",price:849},
-{name:"Banner / Flex Designing (Per Feet)",price:49},
-{name:"Social Media Post Design",price:249}
+{name:"Single Page Poster",price:349,cost:100},
+{name:"Signature Poster Design",price:499,cost:150},
+{name:"Duo Poster Pack (2 Designs)",price:649,cost:200},
+{name:"Trio Poster Pack (3 Designs)",price:949,cost:300},
+{name:"Ultimate Poster Pack (4 Designs)",price:1199,cost:400},
+{name:"Classic Single Page Invitation",price:499,cost:150},
+{name:"Luxury Single Page Invitation",price:649,cost:200},
+{name:"Grand 4-Page Wedding Invitation",price:999,cost:350},
+{name:"Additional Page (Add-On)",price:299,cost:80},
+{name:"Essential Logo Design",price:999,cost:300},
+{name:"Elite Logo Design",price:1299,cost:400},
+{name:"Single Page Menu Design",price:549,cost:150},
+{name:"Double Page Menu Design",price:849,cost:250},
+{name:"Banner / Flex Designing (Per Feet)",price:49,cost:10},
+{name:"Social Media Post Design",price:249,cost:70}
 ];
 
 function addRow(){
@@ -184,12 +191,12 @@ function addRow(){
   div.innerHTML=`
     <select class="serviceSelect">${options}</select>
     <input type="number" class="qty" value="1" min="1">
+    <button onclick="this.parentElement.remove()">❌</button>
   `;
 
   document.getElementById("items").appendChild(div);
 }
 addRow();
-
 
 function createBill(){
 
@@ -202,6 +209,7 @@ function createBill(){
   let rows=document.querySelectorAll(".itemRow");
 
   let subtotal=0;
+  let totalCost=0;
 
   let tableHTML="<table>";
   tableHTML+="<tr><th>Service</th><th>Qty</th><th>Price</th><th>Total</th></tr>";
@@ -213,6 +221,7 @@ function createBill(){
 
     let amount=service.price*qty;
     subtotal+=amount;
+    totalCost+=service.cost*qty;
 
     tableHTML+="<tr>";
     tableHTML+="<td>"+service.name+"</td>";
@@ -228,6 +237,12 @@ function createBill(){
   let balance=total-paid;
   let status=balance>0?"DUE":"PAID";
 
+  let profit=total-totalCost;
+  console.log("💰 Total Profit:",profit);
+
+  let upiAmount = balance>0 ? balance : total;
+  upiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${upiAmount}&cu=INR`;
+
   let date=new Date().toLocaleDateString();
   let invoiceNo="AC-"+Date.now().toString().slice(-6);
 
@@ -235,7 +250,7 @@ function createBill(){
   <div id="finalBill" class="invoice">
     <div class="statusBadge ${status==="PAID"?"paid":"due"}">${status}</div>
     <h2 style="text-align:center;">ALGUM CREATIONS</h2>
-    <p style="text-align:center;">Professional Graphic Design Invoice</p>
+    <p style="text-align:center;">Where Your Dream Meets With Our Creativity</p>
     <hr>
     <p><strong>Invoice No:</strong> ${invoiceNo}</p>
     <p><strong>Date:</strong> ${date}</p>
@@ -250,14 +265,19 @@ function createBill(){
       Paid: ₹${paid.toFixed(2)}<br>
       Balance: ₹${balance.toFixed(2)}
     </div>
+    <div id="qrcode" style="margin-top:20px;"></div>
   </div>`;
 
   document.getElementById("billPreview").innerHTML=billHTML;
+
+  if(paymentMode==="Online"){
+    new QRCode(document.getElementById("qrcode"), upiLink);
+  }
+
   document.getElementById("afterButtons").style.display="block";
 
-  window.billData={customer,mobile,total,status};
+  window.billData={customer,mobile,total,status,balance};
 }
-
 
 function downloadBill(){
   html2canvas(document.getElementById("finalBill")).then(canvas=>{
@@ -268,6 +288,14 @@ function downloadBill(){
   });
 }
 
+async function downloadPDF(){
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p','mm','a4');
+  const canvas = await html2canvas(document.getElementById("finalBill"));
+  const imgData = canvas.toDataURL("image/png");
+  pdf.addImage(imgData,'PNG',10,10,190,0);
+  pdf.save("Algum_Creations_Invoice.pdf");
+}
 
 function shareWhatsApp(){
   let data=window.billData;
@@ -277,13 +305,16 @@ function shareWhatsApp(){
   if(mobile.length===10){ mobile="91"+mobile; }
 
   let message=
-`ALGUM CREATIONS
-Professional Invoice
+`✨ ALGUM CREATIONS ✨
 
-Client: ${data.customer}
-Status: ${data.status}
+Invoice Status: ${data.status}
 Total: ₹${data.total}
-`;
+Balance: ₹${data.balance}
+
+Pay Here:
+${upiLink}
+
+Thank you for choosing us ❤️`;
 
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
 }
@@ -291,4 +322,4 @@ Total: ₹${data.total}
 </script>
 
 </body>
-  </html>
+</html>
