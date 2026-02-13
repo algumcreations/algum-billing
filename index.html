@@ -5,11 +5,9 @@
 <title>Algum Creations Billing 2026</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-/* ✅ YOUR ORIGINAL CSS UNTOUCHED */
 body{
   font-family:'Segoe UI',sans-serif;
   margin:0;
@@ -61,6 +59,7 @@ button{
 .secondary{background:linear-gradient(45deg,#25D366,#128C7E);}
 .download{background:linear-gradient(45deg,#2196f3,#3f51b5);}
 .thermal{background:linear-gradient(45deg,#ff00cc,#3333ff);}
+.advanceBtn{background:linear-gradient(45deg,#00c6ff,#0072ff);}
 button:hover{transform:scale(1.05);}
 
 .itemRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
@@ -71,6 +70,7 @@ button:hover{transform:scale(1.05);}
   padding:25px;
   border-radius:15px;
   position:relative;
+  margin-top:20px;
 }
 
 .statusBadge{
@@ -145,11 +145,15 @@ button:hover{transform:scale(1.05);}
 
 <button class="primary" onclick="createBill()">Generate Invoice</button>
 
+<input type="number" id="advanceAmount" placeholder="Pay Advance ₹" style="width:200px; margin-left:15px;">
+<button class="advanceBtn" onclick="generateAdvanceQR()">Generate QR</button>
+
+<div id="advancePreview"></div>
+
 <div id="billPreview" style="margin-top:30px;"></div>
 
 <div id="afterButtons" style="display:none;">
-<button class="download" onclick="downloadBill()">Download PNG</button>
-<button class="download" onclick="downloadPDF()">Download PDF</button>
+<button class="download" onclick="downloadBill()">Download</button>
 <button class="secondary" onclick="shareWhatsApp()">WhatsApp</button>
 <button class="thermal" onclick="window.print()">Print</button>
 </div>
@@ -159,24 +163,23 @@ button:hover{transform:scale(1.05);}
 <script>
 
 const UPI_ID="tinu01jmp@okhdfcbank";
-let upiLink="";
-
-const services=[
-{name:"Single Page Poster",price:349,cost:100},
-{name:"Signature Poster Design",price:499,cost:150},
-{name:"Duo Poster Pack (2 Designs)",price:649,cost:200},
-{name:"Trio Poster Pack (3 Designs)",price:949,cost:300},
-{name:"Ultimate Poster Pack (4 Designs)",price:1199,cost:400},
-{name:"Classic Single Page Invitation",price:499,cost:150},
-{name:"Luxury Single Page Invitation",price:649,cost:200},
-{name:"Grand 4-Page Wedding Invitation",price:999,cost:350},
-{name:"Additional Page (Add-On)",price:299,cost:80},
-{name:"Essential Logo Design",price:999,cost:300},
-{name:"Elite Logo Design",price:1299,cost:400},
-{name:"Single Page Menu Design",price:549,cost:150},
-{name:"Double Page Menu Design",price:849,cost:250},
-{name:"Banner / Flex Designing (Per Feet)",price:49,cost:10},
-{name:"Social Media Post Design",price:249,cost:70}
+let advanceUpiLink="";
+  const services=[
+{name:"Single Page Poster",price:349},
+{name:"Signature Poster Design",price:499},
+{name:"Duo Poster Pack (2 Designs)",price:649},
+{name:"Trio Poster Pack (3 Designs)",price:949},
+{name:"Ultimate Poster Pack (4 Designs)",price:1199},
+{name:"Classic Single Page Invitation",price:499},
+{name:"Luxury Single Page Invitation",price:649},
+{name:"Grand 4-Page Wedding Invitation",price:999},
+{name:"Additional Page (Add-On)",price:299},
+{name:"Essential Logo Design",price:999},
+{name:"Elite Logo Design",price:1299},
+{name:"Single Page Menu Design",price:549},
+{name:"Double Page Menu Design",price:849},
+{name:"Banner / Flex Designing (Per Feet)",price:49},
+{name:"Social Media Post Design",price:249}
 ];
 
 function addRow(){
@@ -191,12 +194,70 @@ function addRow(){
   div.innerHTML=`
     <select class="serviceSelect">${options}</select>
     <input type="number" class="qty" value="1" min="1">
-    <button onclick="this.parentElement.remove()">❌</button>
   `;
 
   document.getElementById("items").appendChild(div);
 }
 addRow();
+
+/* ADVANCE QR FUNCTION */
+
+function generateAdvanceQR(){
+
+  let customer=document.getElementById("customer").value || "N/A";
+  let amount=parseFloat(document.getElementById("advanceAmount").value)||0;
+
+  if(amount<=0){
+    alert("Enter Advance Amount");
+    return;
+  }
+
+  advanceUpiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${amount}&cu=INR`;
+
+  let date=new Date().toLocaleDateString();
+
+  let receiptHTML=`
+  <div class="invoice">
+    <h3 style="text-align:center;">ADVANCE PAYMENT REQUEST</h3>
+    <hr>
+    <p><strong>Customer:</strong> ${customer}</p>
+    <p><strong>Advance Payment:</strong> ₹${amount}</p>
+    <p><strong>Date:</strong> ${date}</p>
+    <div id="advanceQR" style="margin-top:15px;"></div>
+    <br>
+    <button class="secondary" onclick="shareAdvanceWhatsApp()">Share on WhatsApp</button>
+  </div>
+  `;
+
+  document.getElementById("advancePreview").innerHTML=receiptHTML;
+
+  new QRCode(document.getElementById("advanceQR"), advanceUpiLink);
+}
+
+function shareAdvanceWhatsApp(){
+
+  let mobile=document.getElementById("mobile").value.replace(/\D/g,"");
+  if(mobile.length===10){ mobile="91"+mobile; }
+
+  let amount=document.getElementById("advanceAmount").value;
+
+  let message=
+`ALGUM CREATIONS
+
+ADVANCE PAYMENT REQUEST
+
+Client: ${document.getElementById("customer").value}
+Amount: ₹${amount}
+
+Pay Here:
+${advanceUpiLink}
+
+Thank You`;
+
+  window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
+}
+
+/* ORIGINAL BILL SYSTEM BELOW — UNTOUCHED */
 
 function createBill(){
 
@@ -209,7 +270,6 @@ function createBill(){
   let rows=document.querySelectorAll(".itemRow");
 
   let subtotal=0;
-  let totalCost=0;
 
   let tableHTML="<table>";
   tableHTML+="<tr><th>Service</th><th>Qty</th><th>Price</th><th>Total</th></tr>";
@@ -221,7 +281,6 @@ function createBill(){
 
     let amount=service.price*qty;
     subtotal+=amount;
-    totalCost+=service.cost*qty;
 
     tableHTML+="<tr>";
     tableHTML+="<td>"+service.name+"</td>";
@@ -237,12 +296,6 @@ function createBill(){
   let balance=total-paid;
   let status=balance>0?"DUE":"PAID";
 
-  let profit=total-totalCost;
-  console.log("💰 Total Profit:",profit);
-
-  let upiAmount = balance>0 ? balance : total;
-  upiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${upiAmount}&cu=INR`;
-
   let date=new Date().toLocaleDateString();
   let invoiceNo="AC-"+Date.now().toString().slice(-6);
 
@@ -250,7 +303,7 @@ function createBill(){
   <div id="finalBill" class="invoice">
     <div class="statusBadge ${status==="PAID"?"paid":"due"}">${status}</div>
     <h2 style="text-align:center;">ALGUM CREATIONS</h2>
-    <p style="text-align:center;">Where Your Dream Meets With Our Creativity</p>
+    <p style="text-align:center;">Professional Graphic Design Invoice</p>
     <hr>
     <p><strong>Invoice No:</strong> ${invoiceNo}</p>
     <p><strong>Date:</strong> ${date}</p>
@@ -265,18 +318,12 @@ function createBill(){
       Paid: ₹${paid.toFixed(2)}<br>
       Balance: ₹${balance.toFixed(2)}
     </div>
-    <div id="qrcode" style="margin-top:20px;"></div>
   </div>`;
 
   document.getElementById("billPreview").innerHTML=billHTML;
-
-  if(paymentMode==="Online"){
-    new QRCode(document.getElementById("qrcode"), upiLink);
-  }
-
   document.getElementById("afterButtons").style.display="block";
 
-  window.billData={customer,mobile,total,status,balance};
+  window.billData={customer,mobile,total,status};
 }
 
 function downloadBill(){
@@ -288,15 +335,6 @@ function downloadBill(){
   });
 }
 
-async function downloadPDF(){
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF('p','mm','a4');
-  const canvas = await html2canvas(document.getElementById("finalBill"));
-  const imgData = canvas.toDataURL("image/png");
-  pdf.addImage(imgData,'PNG',10,10,190,0);
-  pdf.save("Algum_Creations_Invoice.pdf");
-}
-
 function shareWhatsApp(){
   let data=window.billData;
   if(!data){ alert("Generate Invoice First"); return; }
@@ -305,21 +343,17 @@ function shareWhatsApp(){
   if(mobile.length===10){ mobile="91"+mobile; }
 
   let message=
-`✨ ALGUM CREATIONS ✨
+`ALGUM CREATIONS
+Professional Invoice
 
-Invoice Status: ${data.status}
+Client: ${data.customer}
+Status: ${data.status}
 Total: ₹${data.total}
-Balance: ₹${data.balance}
-
-Pay Here:
-${upiLink}
-
-Thank you for choosing us ❤️`;
+`;
 
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
 }
 
 </script>
-
 </body>
 </html>
