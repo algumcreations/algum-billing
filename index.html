@@ -15,7 +15,6 @@ body{
   background:linear-gradient(135deg,#1e1e2f,#2b1055);
   color:white;
 }
-
 .container{
   max-width:1000px;
   margin:auto;
@@ -24,7 +23,6 @@ body{
   border-radius:20px;
   box-shadow:0 0 40px rgba(255,215,0,0.3);
 }
-
 .brand{text-align:center;margin-bottom:20px;}
 .brand h1{
   margin:0;
@@ -34,7 +32,6 @@ body{
   -webkit-text-fill-color:transparent;
 }
 .brand p{color:#ccc;}
-
 input, select{
   padding:10px;
   border-radius:10px;
@@ -44,7 +41,6 @@ input, select{
   background:#1f2937;
   color:white;
 }
-
 button{
   padding:12px 18px;
   border:none;
@@ -54,16 +50,13 @@ button{
   margin-top:10px;
   transition:0.3s;
 }
-
 .primary{background:linear-gradient(45deg,#ff9800,#ff5722);color:white;}
 .secondary{background:linear-gradient(45deg,#25D366,#128C7E);}
 .download{background:linear-gradient(45deg,#2196f3,#3f51b5);}
 .thermal{background:linear-gradient(45deg,#ff00cc,#3333ff);}
 .advanceBtn{background:linear-gradient(45deg,#00c6ff,#0072ff);}
 button:hover{transform:scale(1.05);}
-
 .itemRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
-
 .invoice{
   background:white;
   color:black;
@@ -72,7 +65,6 @@ button:hover{transform:scale(1.05);}
   position:relative;
   margin-top:20px;
 }
-
 .statusBadge{
   position:absolute;
   top:20px;
@@ -82,28 +74,23 @@ button:hover{transform:scale(1.05);}
   font-weight:bold;
   color:white;
 }
-
 .paid{ background:green; }
 .due{ background:red; }
 .partial{ background:orange; }
-
 .invoice table{
   width:100%;
   border-collapse:collapse;
   margin-top:15px;
 }
-
 .invoice th{
   background:#111827;
   color:white;
 }
-
 .invoice th, .invoice td{
   padding:10px;
   border:1px solid #ddd;
   text-align:center;
 }
-
 .totalBox{
   margin-top:15px;
   text-align:right;
@@ -125,6 +112,8 @@ button:hover{transform:scale(1.05);}
 <input type="text" id="customer" placeholder="Client Name" style="width:100%;">
 <input type="tel" id="mobile" value="+91" style="width:100%;">
 
+<button class="primary" onclick="fetchClient()">Fetch Client</button>
+
 <div id="items"></div>
 
 <button class="primary" onclick="addRow()">+ Add Service</button>
@@ -132,7 +121,6 @@ button:hover{transform:scale(1.05);}
 <br><br>
 
 <input type="number" id="discount" placeholder="Discount Amount ₹" style="width:200px;">
-
 <br><br>
 
 <select id="paymentMode">
@@ -141,7 +129,6 @@ button:hover{transform:scale(1.05);}
 </select>
 
 <input type="number" id="paidAmount" placeholder="Paid Amount ₹">
-
 <br><br>
 
 <button class="primary" onclick="createBill()">Generate Invoice</button>
@@ -166,6 +153,7 @@ button:hover{transform:scale(1.05);}
 const UPI_ID="tinu01jmp@okhdfcbank";
 let advanceUpiLink="";
 let billUpiLink="";
+const SHEET_API="https://script.google.com/macros/s/AKfycbz7L7LsHuTui703d62Yt4PO4Wtw69a4ALM-eVJqJmalwYcygLgq6EPPS8kuwRQNh28dcQ/exec";
 
 const services=[
 {name:"Single Page Poster",price:349},
@@ -203,10 +191,32 @@ function addRow(){
 }
 addRow();
 
-/* ADVANCE QR */
+/* --- FETCH CLIENT FROM SHEETS --- */
+async function fetchClient(){
+  let phone=document.getElementById("mobile").value.replace(/\D/g,"");
+  if(phone.length===10) phone="91"+phone;
+  
+  try{
+    const res=await fetch(SHEET_API,{
+      method:'POST',
+      body:JSON.stringify({action:"getClient",phone})
+    });
+    const data=await res.json();
 
+    if(data.found){
+      document.getElementById("customer").value=data.name;
+      alert(`Client found! Total Due: ₹${data.totalDue}`);
+    }else{
+      alert("Client not found, you can add new.");
+    }
+  }catch(err){
+    console.error(err);
+    alert("Error fetching client from Sheet.");
+  }
+}
+
+/* --- ADVANCE / FULL PAYMENT QR --- */
 function generateAdvanceQR(type){
-
   let customer=document.getElementById("customer").value || "N/A";
   let rows=document.querySelectorAll(".itemRow");
 
@@ -218,20 +228,11 @@ function generateAdvanceQR(type){
     subtotal+=service.price*qty;
   });
 
-  let amount=0;
-  let title="";
-
-  if(type==="full"){
-    amount=subtotal;
-    title="FULL PAYMENT REQUEST";
-  }else{
-    amount=parseFloat(document.getElementById("advanceAmount").value)||0;
-    if(amount<=0){ alert("Enter Advance Amount"); return; }
-    title="ADVANCE PAYMENT REQUEST";
-  }
+  let amount=0,title="";
+  if(type==="full"){ amount=subtotal; title="FULL PAYMENT REQUEST"; }
+  else{ amount=parseFloat(document.getElementById("advanceAmount").value)||0; if(amount<=0){ alert("Enter Advance"); return; } title="ADVANCE PAYMENT REQUEST"; }
 
   advanceUpiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${amount.toFixed(2)}&cu=INR`;
-
   let date=new Date().toLocaleDateString();
 
   let receiptHTML=`
@@ -243,88 +244,53 @@ function generateAdvanceQR(type){
     <p><strong>Date:</strong> ${date}</p>
     <div id="advanceQR" style="margin-top:15px;"></div>
     <br>
-    <button class="secondary" onclick="shareAdvanceWhatsApp('${amount.toFixed(2)}','${title}')">Share on WhatsApp</button>
-  </div>
-  `;
-
+    <button class="secondary" onclick="shareAdvanceWhatsApp('${amount.toFixed(2)}','${title}')">Share WhatsApp</button>
+  </div>`;
   document.getElementById("advancePreview").innerHTML=receiptHTML;
   new QRCode(document.getElementById("advanceQR"), advanceUpiLink);
 }
 
 function shareAdvanceWhatsApp(amount,title){
-
   let mobile=document.getElementById("mobile").value.replace(/\D/g,"");
-  if(mobile.length===10){ mobile="91"+mobile; }
-
-  let message=
-`*ALGUM CREATIONS*
-Professional Payment Request
-
-${title}
-
-Client: ${document.getElementById("customer").value}
-Amount: ₹${amount}
-
-Payment Link:
-${advanceUpiLink}
-
-Thank you for choosing Algum Creations.`;
-
+  if(mobile.length===10) mobile="91"+mobile;
+  let message=`*ALGUM CREATIONS*\n${title}\nClient: ${document.getElementById("customer").value}\nAmount: ₹${amount}\nPayment Link: ${advanceUpiLink}`;
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
 }
 
-/* BILL SYSTEM */
-
-function createBill(){
-
+/* --- CREATE BILL AND POST TO SHEET --- */
+async function createBill(){
   let customer=document.getElementById("customer").value || "N/A";
-  let mobile=document.getElementById("mobile").value || "N/A";
+  let mobile=document.getElementById("mobile").value.replace(/\D/g,"")||"N/A";
+  if(mobile.length===10) mobile="91"+mobile;
+
   let paymentMode=document.getElementById("paymentMode").value;
   let paid=parseFloat(document.getElementById("paidAmount").value)||0;
   let discount=parseFloat(document.getElementById("discount").value)||0;
 
   let rows=document.querySelectorAll(".itemRow");
   let subtotal=0;
-
-  let tableHTML="<table>";
-  tableHTML+="<tr><th>Service</th><th>Qty</th><th>Price</th><th>Total</th></tr>";
-
+  let tableHTML="<table><tr><th>Service</th><th>Qty</th><th>Price</th><th>Total</th></tr>";
   rows.forEach(row=>{
     let serviceIndex=row.querySelector(".serviceSelect").value;
     let service=services[serviceIndex];
     let qty=parseFloat(row.querySelector(".qty").value)||1;
     let amount=service.price*qty;
     subtotal+=amount;
-
-    tableHTML+=`<tr>
-    <td>${service.name}</td>
-    <td>${qty}</td>
-    <td>₹${service.price}</td>
-    <td>₹${amount}</td>
-    </tr>`;
+    tableHTML+=`<tr><td>${service.name}</td><td>${qty}</td><td>₹${service.price}</td><td>₹${amount}</td></tr>`;
   });
-
   tableHTML+="</table>";
 
   let total=subtotal-discount;
   let balance=total-paid;
-
-  let status="";
-  if(balance<=0){ status="PAID"; }
-  else if(paid>0){ status="PARTIAL"; }
-  else{ status="DUE"; }
+  let status=balance<=0?"PAID":paid>0?"PARTIAL":"DUE";
 
   let date=new Date().toLocaleDateString();
   let invoiceNo="AC-"+Date.now().toString().slice(-6);
 
+  // --- BUILD BILL HTML ---
   let billHTML=`
   <div id="finalBill" class="invoice">
-    <div class="statusBadge ${
-      status==="PAID"?"paid":
-      status==="PARTIAL"?"partial":
-      "due"
-    }">${status}</div>
-
+    <div class="statusBadge ${status==="PAID"?"paid":status==="PARTIAL"?"partial":"due"}">${status}</div>
     <h2 style="text-align:center;">ALGUM CREATIONS</h2>
     <p style="text-align:center;">Where Your Dream Meets With Our Creativity</p>
     <hr>
@@ -341,12 +307,7 @@ function createBill(){
       Paid: ₹${paid.toFixed(2)}<br>
       Balance: ₹${balance.toFixed(2)}
     </div>
-
-    ${balance>0?`
-    <div style="margin-top:20px;text-align:center;">
-      <h3>Scan to Pay ₹${balance.toFixed(2)}</h3>
-      <div id="billQR"></div>
-    </div>`:""}
+    ${balance>0?`<div style="margin-top:20px;text-align:center;"><h3>Scan to Pay ₹${balance.toFixed(2)}</h3><div id="billQR"></div></div>`:""}
   </div>`;
 
   document.getElementById("billPreview").innerHTML=billHTML;
@@ -358,6 +319,26 @@ function createBill(){
   }
 
   window.billData={customer,mobile,total,status};
+
+  // --- POST TO GOOGLE SHEET ---
+  try{
+    const res=await fetch(SHEET_API,{
+      method:'POST',
+      body:JSON.stringify({action:"addBill",phone:mobile,name:customer,amount:total})
+    });
+    const data=await res.json();
+    if(data.success) console.log("Bill added to sheet ✅");
+    else console.warn("Failed to add bill");
+    // Add payment if paid>0
+    if(paid>0){
+      const payRes=await fetch(SHEET_API,{
+        method:'POST',
+        body:JSON.stringify({action:"addPayment",phone:mobile,amount:paid,mode:paymentMode})
+      });
+      const payData=await payRes.json();
+      if(payData.success) console.log("Payment added ✅");
+    }
+  }catch(err){ console.error("Sheet update error:",err);}
 }
 
 function downloadBill(){
@@ -370,26 +351,12 @@ function downloadBill(){
 }
 
 function shareWhatsApp(){
-
   let data=window.billData;
   if(!data){ alert("Generate Invoice First"); return; }
-
   let mobile=data.mobile.replace(/\D/g,"");
-  if(mobile.length===10){ mobile="91"+mobile; }
+  if(mobile.length===10) mobile="91"+mobile;
 
-  let message=
-`*ALGUM CREATIONS*
-Professional Invoice
-
-Client: ${data.customer}
-Invoice Status: ${data.status}
-Total Amount: ₹${data.total}
-
-${data.status!=="PAID" ? "Payment Link:\n"+billUpiLink+"\n" : ""}
-
-Thank you for choosing Algum Creations.
-We appreciate your business.`;
-
+  let message=`*ALGUM CREATIONS*\nInvoice Status: ${data.status}\nTotal: ₹${data.total}\n${data.status!=="PAID"?"Payment Link:\n"+billUpiLink+"\n":""}`;
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
 }
 
