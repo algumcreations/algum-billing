@@ -85,6 +85,7 @@ button:hover{transform:scale(1.05);}
 
 .paid{ background:green; }
 .due{ background:red; }
+.partial{ background:orange; }
 
 .invoice table{
   width:100%;
@@ -145,11 +146,11 @@ button:hover{transform:scale(1.05);}
 
 <button class="primary" onclick="createBill()">Generate Invoice</button>
 
-<input type="number" id="advanceAmount" placeholder="Pay Advance ₹" style="width:200px; margin-left:15px;">
-<button class="advanceBtn" onclick="generateAdvanceQR()">Generate QR</button>
+<input type="number" id="advanceAmount" placeholder="Enter Amount ₹" style="width:200px; margin-left:15px;">
+<button class="advanceBtn" onclick="generateAdvanceQR('advance')">Advance QR</button>
+<button class="advanceBtn" onclick="generateAdvanceQR('full')">Full Payment QR</button>
 
 <div id="advancePreview"></div>
-
 <div id="billPreview" style="margin-top:30px;"></div>
 
 <div id="afterButtons" style="display:none;">
@@ -164,7 +165,9 @@ button:hover{transform:scale(1.05);}
 
 const UPI_ID="tinu01jmp@okhdfcbank";
 let advanceUpiLink="";
-  const services=[
+let billUpiLink="";
+
+const services=[
 {name:"Single Page Poster",price:349},
 {name:"Signature Poster Design",price:499},
 {name:"Duo Poster Pack (2 Designs)",price:649},
@@ -200,65 +203,77 @@ function addRow(){
 }
 addRow();
 
-/* ADVANCE QR FUNCTION */
+/* ADVANCE QR */
 
-function generateAdvanceQR(){
+function generateAdvanceQR(type){
 
   let customer=document.getElementById("customer").value || "N/A";
-  let amount=parseFloat(document.getElementById("advanceAmount").value)||0;
+  let rows=document.querySelectorAll(".itemRow");
 
-  if(amount<=0){
-    alert("Enter Advance Amount");
-    return;
+  let subtotal=0;
+  rows.forEach(row=>{
+    let serviceIndex=row.querySelector(".serviceSelect").value;
+    let service=services[serviceIndex];
+    let qty=parseFloat(row.querySelector(".qty").value)||1;
+    subtotal+=service.price*qty;
+  });
+
+  let amount=0;
+  let title="";
+
+  if(type==="full"){
+    amount=subtotal;
+    title="FULL PAYMENT REQUEST";
+  }else{
+    amount=parseFloat(document.getElementById("advanceAmount").value)||0;
+    if(amount<=0){ alert("Enter Advance Amount"); return; }
+    title="ADVANCE PAYMENT REQUEST";
   }
 
-  advanceUpiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${amount}&cu=INR`;
+  advanceUpiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${amount.toFixed(2)}&cu=INR`;
 
   let date=new Date().toLocaleDateString();
 
   let receiptHTML=`
   <div class="invoice">
-    <h3 style="text-align:center;">ADVANCE/DUE PAYMENT REQUEST</h3>
+    <h3 style="text-align:center;">${title}</h3>
     <hr>
     <p><strong>Customer:</strong> ${customer}</p>
-    <p><strong>Advance/Due Payment:</strong> ₹${amount}</p>
+    <p><strong>Amount:</strong> ₹${amount.toFixed(2)}</p>
     <p><strong>Date:</strong> ${date}</p>
-    <p><strong>For More Details Check Invoice</p>
     <div id="advanceQR" style="margin-top:15px;"></div>
     <br>
-    <button class="secondary" onclick="shareAdvanceWhatsApp()">Share on WhatsApp</button>
+    <button class="secondary" onclick="shareAdvanceWhatsApp('${amount.toFixed(2)}','${title}')">Share on WhatsApp</button>
   </div>
   `;
 
   document.getElementById("advancePreview").innerHTML=receiptHTML;
-
   new QRCode(document.getElementById("advanceQR"), advanceUpiLink);
 }
 
-function shareAdvanceWhatsApp(){
+function shareAdvanceWhatsApp(amount,title){
 
   let mobile=document.getElementById("mobile").value.replace(/\D/g,"");
   if(mobile.length===10){ mobile="91"+mobile; }
 
-  let amount=document.getElementById("advanceAmount").value;
-
   let message=
-`ALGUM CREATIONS
+`*ALGUM CREATIONS*
+Professional Payment Request
 
-ADVANCE/DUE PAYMENT REQUEST
+${title}
 
 Client: ${document.getElementById("customer").value}
 Amount: ₹${amount}
 
-Pay Here:
+Payment Link:
 ${advanceUpiLink}
 
-Thank You`;
+Thank you for choosing Algum Creations.`;
 
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
 }
 
-/* ORIGINAL BILL SYSTEM BELOW — UNTOUCHED */
+/* BILL SYSTEM */
 
 function createBill(){
 
@@ -269,7 +284,6 @@ function createBill(){
   let discount=parseFloat(document.getElementById("discount").value)||0;
 
   let rows=document.querySelectorAll(".itemRow");
-
   let subtotal=0;
 
   let tableHTML="<table>";
@@ -279,32 +293,40 @@ function createBill(){
     let serviceIndex=row.querySelector(".serviceSelect").value;
     let service=services[serviceIndex];
     let qty=parseFloat(row.querySelector(".qty").value)||1;
-
     let amount=service.price*qty;
     subtotal+=amount;
 
-    tableHTML+="<tr>";
-    tableHTML+="<td>"+service.name+"</td>";
-    tableHTML+="<td>"+qty+"</td>";
-    tableHTML+="<td>₹"+service.price+"</td>";
-    tableHTML+="<td>₹"+amount+"</td>";
-    tableHTML+="</tr>";
+    tableHTML+=`<tr>
+    <td>${service.name}</td>
+    <td>${qty}</td>
+    <td>₹${service.price}</td>
+    <td>₹${amount}</td>
+    </tr>`;
   });
 
   tableHTML+="</table>";
 
   let total=subtotal-discount;
   let balance=total-paid;
-  let status=balance>0?"DUE":"PAID";
+
+  let status="";
+  if(balance<=0){ status="PAID"; }
+  else if(paid>0){ status="PARTIAL"; }
+  else{ status="DUE"; }
 
   let date=new Date().toLocaleDateString();
   let invoiceNo="AC-"+Date.now().toString().slice(-6);
 
   let billHTML=`
   <div id="finalBill" class="invoice">
-    <div class="statusBadge ${status==="PAID"?"paid":"due"}">${status}</div>
+    <div class="statusBadge ${
+      status==="PAID"?"paid":
+      status==="PARTIAL"?"partial":
+      "due"
+    }">${status}</div>
+
     <h2 style="text-align:center;">ALGUM CREATIONS</h2>
-    <p style="text-align:center;">Didital Branding Studio</p>
+    <p style="text-align:center;">Where Your Dream Meets With Our Creativity</p>
     <hr>
     <p><strong>Invoice No:</strong> ${invoiceNo}</p>
     <p><strong>Date:</strong> ${date}</p>
@@ -319,10 +341,21 @@ function createBill(){
       Paid: ₹${paid.toFixed(2)}<br>
       Balance: ₹${balance.toFixed(2)}
     </div>
+
+    ${balance>0?`
+    <div style="margin-top:20px;text-align:center;">
+      <h3>Scan to Pay ₹${balance.toFixed(2)}</h3>
+      <div id="billQR"></div>
+    </div>`:""}
   </div>`;
 
   document.getElementById("billPreview").innerHTML=billHTML;
   document.getElementById("afterButtons").style.display="block";
+
+  if(balance>0){
+    billUpiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${balance.toFixed(2)}&cu=INR`;
+    new QRCode(document.getElementById("billQR"), billUpiLink);
+  }
 
   window.billData={customer,mobile,total,status};
 }
@@ -337,6 +370,7 @@ function downloadBill(){
 }
 
 function shareWhatsApp(){
+
   let data=window.billData;
   if(!data){ alert("Generate Invoice First"); return; }
 
@@ -344,15 +378,17 @@ function shareWhatsApp(){
   if(mobile.length===10){ mobile="91"+mobile; }
 
   let message=
-`ALGUM CREATIONS
-Digital Branding Studio 
+`*ALGUM CREATIONS*
+Professional Invoice
 
 Client: ${data.customer}
-Status: ${data.status}
-Total: ₹${data.total}
+Invoice Status: ${data.status}
+Total Amount: ₹${data.total}
 
-THANKS FOR CHOSSING US❤️
-`;
+${data.status!=="PAID" ? "Payment Link:\n"+billUpiLink+"\n" : ""}
+
+Thank you for choosing Algum Creations.
+We appreciate your business.`;
 
   window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
 }
