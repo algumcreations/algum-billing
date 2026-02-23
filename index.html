@@ -12,115 +12,124 @@ body{
   font-family:'Segoe UI',sans-serif;
   margin:0;
   padding:20px;
-  background:linear-gradient(135deg,#1e1e2f,#2b1055);
-  color:white;
+  background:linear-gradient(135deg,#fdfbfb,#ebedee);
+  color:#111;
 }
+
 .container{
-  max-width:1500px;
+  max-width:900px;
   margin:auto;
-  background:#111827;
-  padding:40px;
-  border-radius:35px;
-  box-shadow:0 0 60px rgba(255,215,0,0.3);
+  background:white;
+  padding:25px;
+  border-radius:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
 }
-.brand{text-align:center;margin-bottom:20px;}
+
+.brand{text-align:center;margin-bottom:25px;}
 .brand h1{
   margin:0;
-  font-size:32px;
-  background:linear-gradient(45deg,gold,#ffcc00);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  font-size:30px;
+  color:#4f46e5;
 }
-.brand p{color:#ccc;}
+.brand p{color:#555;font-size:15px;}
+
 input, select{
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  font-size:14px;
-  margin-bottom:10px;
-  background:#1f2937;
-  color:white;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:18px;
+  margin-bottom:14px;
+  background:#f9fafb;
+  color:#111;
+  width:100%;
 }
+
 button{
-  padding:18px 24px;
+  padding:18px;
   border:none;
-  border-radius:18px;
+  border-radius:14px;
   cursor:pointer;
   font-weight:bold;
-  margin-top:16px;
-  transition:0.3s;
+  font-size:18px;
+  margin-top:12px;
+  transition:0.2s;
+  width:100%;
 }
-.primary{background:linear-gradient(45deg,#ff9800,#ff5722);color:white;}
-.secondary{background:linear-gradient(45deg,#25D366,#128C7E);}
-.download{background:linear-gradient(45deg,#2196f3,#3f51b5);}
-.thermal{background:linear-gradient(45deg,#ff00cc,#3333ff);}
-.advanceBtn{background:linear-gradient(45deg,#00c6ff,#0072ff);}
-button:hover{transform:scale(1.05);}
-.itemRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center;}
+
+.primary{
+  background:linear-gradient(45deg,#6366f1,#4f46e5);
+  color:white;
+}
+
+.secondary{
+  background:linear-gradient(45deg,#25D366,#128C7E);
+  color:white;
+}
+
+.download{
+  background:linear-gradient(45deg,#0ea5e9,#2563eb);
+  color:white;
+}
+
+.thermal{
+  background:linear-gradient(45deg,#f43f5e,#ec4899);
+  color:white;
+}
+
+.advanceBtn{
+  background:linear-gradient(45deg,#14b8a6,#0d9488);
+  color:white;
+}
+
+button:hover{
+  transform:scale(1.02);
+}
+
+.itemRow{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:15px;
+}
+
+.itemRow select,
+.itemRow input{
+  width:100%;
+}
+
 .removeBtn{
-  background:red;
+  background:#ef4444;
   color:white;
   border:none;
   border-radius:50%;
-  width:35px;
-  height:35px;
-  cursor:pointer;
-  font-weight:bold;
+  width:45px;
+  height:45px;
   font-size:22px;
+  align-self:flex-end;
 }
-.invoice{
-  background:white;
-  color:black;
-  padding:30px;
-  border-radius:20px;
-  position:relative;
-  margin-top:25px;
-}
-.statusBadge{
-  position:absolute;
-  top:20px;
-  right:20px;
-  padding:8px 15px;
-  border-radius:20px;
-  font-weight:bold;
-  color:white;
-}
-.paid{ background:green; }
-.due{ background:red; }
-.partial{ background:orange; }
-.invoice table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-.invoice th{
-  background:#111827;
-  color:white;
-}
-.invoice th, .invoice td{
-  padding:10px;
-  border:1px solid #ddd;
-  text-align:center;
-}
-.totalBox{
-  margin-top:24px;
-  text-align:right;
-  font-weight:bold;
-  font-size:22px;
-}
+
 #totalPreview{
   font-weight:bold;
-  margin:16px 0;
-  font-size:24px;
+  margin:18px 0;
+  font-size:22px;
+  color:#4f46e5;
 }
+
 .clientPopup{
-  background:#222;
+  background:#f3f4f6;
   padding:15px;
   border-radius:12px;
   margin-bottom:15px;
+  font-size:16px;
 }
-.clientPopup p{
-  margin:3px 0;
+
+@media(min-width:600px){
+  .itemRow{
+    flex-direction:row;
+    align-items:center;
+  }
+  .itemRow select{flex:2;}
+  .itemRow input{flex:1;}
 }
 </style>
 </head>
