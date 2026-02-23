@@ -131,55 +131,97 @@ button:hover{
   .itemRow select{flex:2;}
   .itemRow input{flex:1;}
 }
-  /* ===== Invoice Section ===== */
+/* ===== Premium Invoice Section ===== */
 
 .invoice{
   background:#ffffff;
-  color:#111;
-  padding:30px;
-  border-radius:20px;
-  margin-top:30px;
-  box-shadow:0 5px 20px rgba(0,0,0,0.08);
+  color:#111827;
+  padding:35px;
+  border-radius:24px;
+  margin-top:35px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.08);
   position:relative;
+  border:1px solid #eef2ff;
 }
 
+/* Header Styling */
+.invoice h2{
+  margin:0;
+  font-size:26px;
+  color:#4f46e5;
+  letter-spacing:1px;
+}
+
+.invoice hr{
+  border:none;
+  height:1px;
+  background:linear-gradient(to right,#4f46e5,#a5b4fc);
+  margin:18px 0;
+}
+
+/* Status Badge Improved */
 .statusBadge{
   position:absolute;
-  top:20px;
-  right:20px;
-  padding:6px 14px;
-  border-radius:20px;
-  font-weight:bold;
-  font-size:14px;
+  top:25px;
+  right:25px;
+  padding:8px 18px;
+  border-radius:50px;
+  font-weight:600;
+  font-size:13px;
+  letter-spacing:1px;
   color:white;
+  box-shadow:0 5px 15px rgba(0,0,0,0.15);
 }
 
-.paid{ background:#16a34a; }
-.due{ background:#dc2626; }
-.partial{ background:#f59e0b; }
+.paid{ background:linear-gradient(45deg,#16a34a,#22c55e); }
+.due{ background:linear-gradient(45deg,#dc2626,#ef4444); }
+.partial{ background:linear-gradient(45deg,#f59e0b,#fbbf24); }
 
+/* Table Design */
 .invoice table{
   width:100%;
-  border-collapse:collapse;
-  margin-top:20px;
+  border-collapse:separate;
+  border-spacing:0;
+  margin-top:25px;
+  border-radius:14px;
+  overflow:hidden;
 }
 
 .invoice th{
   background:#4f46e5;
   color:white;
+  font-weight:600;
+  padding:14px;
 }
 
-.invoice th,
 .invoice td{
-  padding:12px;
-  border:1px solid #e5e7eb;
-  text-align:center;
+  padding:14px;
+  background:#f9fafb;
+  border-bottom:1px solid #e5e7eb;
+  font-weight:500;
 }
 
+.invoice tr:last-child td{
+  border-bottom:none;
+}
+
+.invoice tr:nth-child(even) td{
+  background:#eef2ff;
+}
+
+/* Total Section Card Style */
 .totalBox{
-  margin-top:25px;
+  margin-top:30px;
+  padding:20px;
+  background:#f3f4f6;
+  border-radius:16px;
   text-align:right;
-  font-weight:bold;
+  font-weight:600;
+  font-size:18px;
+  line-height:1.8;
+}
+
+.totalBox strong{
   font-size:20px;
   color:#4f46e5;
 }
