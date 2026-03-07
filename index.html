@@ -1,521 +1,570 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Algum Creations Billing 2026</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>ALGUM CREATIONS | SMART BILLING SOLUTIONS</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<style>
-body{
-  font-family:'Segoe UI',sans-serif;
-  margin:0;
-  padding:20px;
-  background:linear-gradient(135deg,#fdfbfb,#ebedee);
-  color:#111;
-}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-.container{
-  max-width:900px;
-  margin:auto;
-  background:white;
-  padding:25px;
-  border-radius:25px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);
-}
+        :root {
+            --brand: #6366f1;
+            --brand-soft: #eef2ff;
+            --success: #10b981;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-soft: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
 
-.brand{text-align:center;margin-bottom:25px;}
-.brand h1{
-  margin:0;
-  font-size:30px;
-  color:#4f46e5;
-}
-.brand p{color:#555;font-size:15px;}
+        [data-theme="dark"] {
+            --bg: #020617;
+            --card: #0f172a;
+            --text: #f8fafc;
+            --text-soft: #94a3b8;
+            --border: #1e293b;
+            --brand-soft: rgba(99, 102, 241, 0.1);
+        }
 
-input, select{
-  padding:14px;
-  border-radius:12px;
-  border:1px solid #ddd;
-  font-size:18px;
-  margin-bottom:14px;
-  background:#f9fafb;
-  color:#111;
-  width:100%;
-}
+        * { box-sizing: border-box; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { background-color: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; justify-content: center; min-height: 100vh; }
 
-button{
-  padding:18px;
-  border:none;
-  border-radius:14px;
-  cursor:pointer;
-  font-weight:bold;
-  font-size:18px;
-  margin-top:12px;
-  transition:0.2s;
-  width:100%;
-}
+        .app-container {
+            width: 100%; max-width: 850px; background: var(--card); border-radius: 24px;
+            box-shadow: var(--shadow); padding: 25px; border: 1px solid var(--border);
+            position: relative;
+        }
 
-.primary{
-  background:linear-gradient(45deg,#6366f1,#4f46e5);
-  color:white;
-}
+        /* Tutorial Styles */
+        #tutorialOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.9); z-index: 10000;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .tut-card {
+            background: var(--card); width: 100%; max-width: 500px;
+            border-radius: 24px; padding: 30px; position: relative;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .tut-header { text-align: center; margin-bottom: 20px; }
+        .tut-header h2 { color: var(--brand); margin: 0; }
+        .tut-step { margin-bottom: 20px; border-left: 4px solid var(--brand); padding-left: 15px; }
+        .tut-step b { display: block; color: var(--text); font-size: 14px; margin-bottom: 4px; }
+        .tut-step p { margin: 0; font-size: 13px; color: var(--text-soft); line-height: 1.5; }
 
-.secondary{
-  background:linear-gradient(45deg,#25D366,#128C7E);
-  color:white;
-}
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .header h1 { margin: 0; font-size: 26px; font-weight: 800; color: var(--brand); letter-spacing: -0.5px; }
+        .header p { margin: 2px 0 0; color: var(--text-soft); font-size: 11px; text-transform: uppercase; font-weight: 700; }
 
-.download{
-  background:linear-gradient(45deg,#0ea5e9,#2563eb);
-  color:white;
-}
+        .header-btns { display: flex; gap: 10px; }
+        .theme-btn, .reset-btn { background: var(--brand-soft); border: none; width: 42px; height: 42px; border-radius: 12px; cursor: pointer; color: var(--brand); font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .reset-btn { color: var(--danger); background: #fee2e2; }
 
-.thermal{
-  background:linear-gradient(45deg,#f43f5e,#ec4899);
-  color:white;
-}
+        .section-label { font-size: 11px; font-weight: 800; color: var(--brand); text-transform: uppercase; margin: 20px 0 10px; display: block; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 11px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; }
+        
+        input, select { padding: 12px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 16px; outline: none; background: var(--card); color: var(--text); width: 100%; }
+        input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
 
-.advanceBtn{
-  background:linear-gradient(45deg,#14b8a6,#0d9488);
-  color:white;
-}
+        .mobile-input-wrapper { display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 12px; background: var(--card); overflow: hidden; }
+        .mobile-prefix { background: var(--brand-soft); color: var(--brand); font-weight: 800; padding: 12px; border-right: 1.5px solid var(--border); }
+        .mobile-input-wrapper input { border: none; border-radius: 0; }
 
-button:hover{
-  transform:scale(1.02);
-}
+        .btn-sync { background: var(--brand); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; width: 100%; }
+        .btn-sync:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.itemRow{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-top:15px;
-}
+        .item-list { margin-top: 15px; border-top: 1px dashed var(--border); padding-top: 15px; }
+        .item-row { display: grid; grid-template-columns: 2.5fr 0.8fr 0.8fr 42px; gap: 10px; margin-bottom: 12px; align-items: center; }
+        .btn-remove { background: #fee2e2; color: var(--danger); border: none; height: 42px; border-radius: 10px; cursor: pointer; font-weight: 800; font-size: 18px; }
 
-.itemRow select,
-.itemRow input{
-  width:100%;
-}
+        .gst-toggle-card { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--bg); border-radius: 15px; border: 1px solid var(--border); margin-top: 15px; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--brand); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
-.removeBtn{
-  background:#ef4444;
-  color:white;
-  border:none;
-  border-radius:50%;
-  width:45px;
-  height:45px;
-  font-size:22px;
-  align-self:flex-end;
-}
+        .breakdown-card { background: var(--brand-soft); border-radius: 20px; padding: 20px; margin: 25px 0; border: 1px solid var(--brand); }
+        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .total-row { border-top: 1px solid var(--brand); margin-top: 10px; padding-top: 10px; font-weight: 800; font-size: 24px; color: var(--brand); }
 
-#totalPreview{
-  font-weight:bold;
-  margin:18px 0;
-  font-size:22px;
-  color:#4f46e5;
-}
+        .quick-pay-section { background: var(--bg); border: 2px dashed var(--brand); padding: 20px; border-radius: 18px; margin: 25px 0; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); }
+        #quickPayAmount { font-size: 28px; font-weight: 800; text-align: center; color: var(--brand); border: 2px solid var(--brand); height: 70px; margin-bottom: 15px; }
 
-.clientPopup{
-  background:#f3f4f6;
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:15px;
-  font-size:16px;
-}
+        .invoice-outer { margin-top: 30px; display: none; overflow-x: auto; }
+        .invoice-card { width: 750px; margin: 0 auto; background: white; padding: 45px; color: #000; position: relative; border: 1px solid #ddd; }
+        .inv-badge { position: absolute; top: 40px; right: 45px; background: #000; color: #fff; padding: 4px 12px; font-size: 10px; font-weight: 900; }
+        .inv-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .inv-table th { border-bottom: 2px solid #000; text-align: left; padding: 10px; font-size: 12px; }
+        .inv-table td { padding: 10px; border-bottom: 1px solid #eee; font-size: 13px; }
 
-@media(min-width:600px){
-  .itemRow{
-    flex-direction:row;
-    align-items:center;
-  }
-  .itemRow select{flex:2;}
-  .itemRow input{flex:1;}
-}
-/* ===== Premium Invoice Section ===== */
+        .inv-breakdown-table { width: 240px; float: right; font-size: 13px; margin-top: 10px; }
+        .inv-breakdown-table td { padding: 4px 0; }
+        .inv-breakdown-table .grand-total { border-top: 2px solid #000; margin-top: 8px; padding-top: 8px; font-weight: 900; font-size: 18px; }
 
-.invoice{
-  background:#ffffff;
-  color:#111827;
-  padding:35px;
-  border-radius:24px;
-  margin-top:35px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.08);
-  position:relative;
-  border:1px solid #eef2ff;
-}
+        .btn-action { padding: 15px; border-radius: 14px; border: none; font-weight: 800; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-main { background: var(--brand); color: white; width: 100%; margin-top: 10px; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-outline { background: var(--card); border: 1.5px solid var(--border); color: var(--text); }
 
-/* Header Styling */
-.invoice h2{
-  margin:0;
-  font-size:26px;
-  color:#4f46e5;
-  letter-spacing:1px;
-}
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #000; color: #fff; padding: 10px 20px; border-radius: 30px; font-size: 13px; display: none; z-index: 9999; }
 
-.invoice hr{
-  border:none;
-  height:1px;
-  background:linear-gradient(to right,#4f46e5,#a5b4fc);
-  margin:18px 0;
-}
-
-/* Status Badge Improved */
-.statusBadge{
-  position:absolute;
-  top:25px;
-  right:25px;
-  padding:8px 18px;
-  border-radius:50px;
-  font-weight:600;
-  font-size:13px;
-  letter-spacing:1px;
-  color:white;
-  box-shadow:0 5px 15px rgba(0,0,0,0.15);
-}
-
-.paid{ background:linear-gradient(45deg,#16a34a,#22c55e); }
-.due{ background:linear-gradient(45deg,#dc2626,#ef4444); }
-.partial{ background:linear-gradient(45deg,#f59e0b,#fbbf24); }
-
-/* Table Design */
-.invoice table{
-  width:100%;
-  border-collapse:separate;
-  border-spacing:0;
-  margin-top:25px;
-  border-radius:14px;
-  overflow:hidden;
-}
-
-.invoice th{
-  background:#4f46e5;
-  color:white;
-  font-weight:600;
-  padding:14px;
-}
-
-.invoice td{
-  padding:14px;
-  background:#f9fafb;
-  border-bottom:1px solid #e5e7eb;
-  font-weight:500;
-}
-
-.invoice tr:last-child td{
-  border-bottom:none;
-}
-
-.invoice tr:nth-child(even) td{
-  background:#eef2ff;
-}
-
-/* Total Section Card Style */
-.totalBox{
-  margin-top:30px;
-  padding:20px;
-  background:#f3f4f6;
-  border-radius:16px;
-  text-align:right;
-  font-weight:600;
-  font-size:18px;
-  line-height:1.8;
-}
-
-.totalBox strong{
-  font-size:20px;
-  color:#4f46e5;
-}
-</style>
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+            .item-row { grid-template-columns: 1fr 1.5fr 42px; gap: 8px; }
+            .item-row input:first-child { grid-column: span 3; }
+        }
+    </style>
 </head>
+<body data-theme="light">
 
-<body>
+<div id="toast"></div>
 
-<div class="container">
+<!-- Tutorial Overlay -->
+<div id="tutorialOverlay">
+    <div class="tut-card">
+        <div class="tut-header">
+            <h2>App Tutorial</h2>
+            <p style="font-size: 12px; color: var(--text-soft);">Kaise use karein? / How to use?</p>
+        </div>
+        
+        <div class="tut-step">
+            <b>1. Customer Profile (Sync)</b>
+            <p>Mobile number dalkar 'Sync Database' karein. Purana udhaar automatic aa jayega. <br> <i>Enter mobile and sync to fetch past dues automatically.</i></p>
+        </div>
 
-<div class="brand">
-<h1>ALGUM CREATIONS</h1>
-<p>Creative Design • Branding • Digital Solutions</p>
-<p>Developed By Rohit Gupta</p>
+        <div class="tut-step">
+            <b>2. Cart & Inventory</b>
+            <p>Items dalo aur rate set karo. Aap suggested items list se bhi select kar sakte hain. <br> <i>Add items and rates. Use suggestions for faster entry.</i></p>
+        </div>
+
+        <div class="tut-step">
+            <b>3. GST Toggle (Tax)</b>
+            <p>Agar bill tax wala banana hai toh toggle ON rakhein, warna OFF kar dein. <br> <i>Keep ON for tax invoices, OFF for regular slips.</i></p>
+        </div>
+
+        <div class="tut-step">
+            <b>4. Quick Pay (Part Payment)</b>
+            <p>Agar customer kuch paisa abhi de raha hai toh 'Quick Pay' mein dalkar 'Pay Part' karein. <br> <i>Use Quick Pay for immediate partial or full payments via QR.</i></p>
+        </div>
+
+        <div class="tut-step">
+            <b>5. Generate & Share</b>
+            <p>Authorize button dabayein bill generate karne ke liye. Phir WhatsApp ya Image save karein. <br> <i>Authorize to generate bill, then share on WhatsApp or save as PNG.</i></p>
+        </div>
+
+        <button class="btn-action btn-main" onclick="closeTutorial()">Got it! Skip Tutorial</button>
+    </div>
 </div>
 
-<input type="text" id="customer" placeholder="Client Name" style="width:100%;">
-<input type="tel" id="mobile" value="+91" style="width:100%;">
+<div class="app-container">
+    <div class="header">
+        <div>
+            <h1>ALGUM CREATIONS</h1>
+            <p>Creative Design · Branding · Digital Solutions</p>
+        </div>
+        <div class="header-btns">
+            <button class="reset-btn" onclick="clearForm()" title="Reset Everything">🗑️</button>
+            <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+        </div>
+    </div>
 
-<button class="primary" onclick="fetchClient()">Fetch Client</button>
+    <!-- Step 1: Client Sync -->
+    <span class="section-label">Customer Profile</span>
+    <div class="grid">
+        <div class="input-group">
+            <label>Customer Mobile</label>
+            <div class="mobile-input-wrapper">
+                <span class="mobile-prefix">+91</span>
+                <input type="tel" id="mobile" placeholder="XXXXXXXXXX" maxlength="10">
+            </div>
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+            <button class="btn-sync" onclick="fetchClient()" id="fetchBtn">
+                Sync Database
+            </button>
+        </div>
+    </div>
+    <div id="clientDetails"></div>
 
-<div id="clientDetails"></div>
+    <div class="grid" style="grid-template-columns: 2fr 1fr;">
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="customer" placeholder="Enter name">
+        </div>
+        <div class="input-group">
+            <label>Bill Date</label>
+            <input type="date" id="billDate">
+        </div>
+    </div>
 
-<div id="items"></div>
-<div id="totalPreview">Total: ₹0</div>
-<button class="primary" onclick="addRow()">+ Add Service</button>
+    <!-- Step 2: Cart Management -->
+    <span class="section-label">Service Inventory & Cart</span>
+    <div class="item-list">
+        <div id="itemsContainer"></div>
+        <button class="btn-outline" style="width: 100%; border-style: dashed; padding: 12px; margin-top: 10px; border-radius: 12px; cursor: pointer;" onclick="addItemRow()">
+            + Add New Service to Cart
+        </button>
+    </div>
 
-<br><br>
-<input type="number" id="discount" placeholder="Discount Amount ₹" style="width:200px;">
-<br><br>
+    <!-- GST Toggle -->
+    <div class="gst-toggle-card">
+        <span style="font-size: 13px; font-weight: 700; color: var(--text-soft);">APPLY GST (TAX)</span>
+        <label class="switch">
+            <input type="checkbox" id="gstEnabled" checked onchange="updateCalculations()">
+            <span class="slider"></span>
+        </label>
+    </div>
 
-<select id="paymentMode">
-<option value="Online">Online</option>
-<option value="Cash">Cash</option>
-</select>
+    <!-- Step 3: Precise Breakdown -->
+    <div class="breakdown-card">
+        <div class="breakdown-row"><span>Subtotal (Net Amount):</span><span id="txtSubtotal">₹0.00</span></div>
+        <div class="breakdown-row"><span>Total GST (Tax):</span><span id="txtTax">₹0.00</span></div>
+        <div class="breakdown-row"><span>Discount Applied:</span><span id="txtDiscount">-₹0.00</span></div>
+        <div class="breakdown-row"><span>Cash Round-off:</span><span id="txtRound">₹0.00</span></div>
+        <div class="total-row breakdown-row">
+            <span>FINAL TOTAL</span>
+            <span id="txtGrandTotal">₹0.00</span>
+        </div>
+    </div>
 
-<input type="number" id="paidAmount" placeholder="Paid Amount ₹">
-<br><br>
+    <!-- Step 4: Quick Pay -->
+    <div class="quick-pay-section">
+        <label style="color: var(--brand); font-weight: 800; display: block; margin-bottom: 10px;">Quick Pay / Part Amount Entry</label>
+        <div style="display: flex; flex-direction: column;">
+            <input type="number" id="quickPayAmount" placeholder="Enter Part Amount" oninput="updateCalculations()">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn-action btn-success" onclick="generateQuickQR('part')">Pay Part</button>
+                <button class="btn-action btn-main" style="margin:0;" onclick="generateQuickQR('full')">Full Pay</button>
+            </div>
+        </div>
+        <div id="quickQRContainer" style="text-align: center; margin-top: 20px;"></div>
+    </div>
 
-<button class="primary" onclick="createBill()">Generate Invoice</button>
+    <!-- Step 5: Final Finance -->
+    <span class="section-label">Payment Authorization</span>
+    <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="input-group">
+            <label>Discount (₹)</label>
+            <input type="number" id="discount" value="0" oninput="updateCalculations()">
+        </div>
+        <div class="input-group">
+            <label>Paid Amt (₹)</label>
+            <input type="number" id="paidAmount" value="0" oninput="updateCalculations()">
+        </div>
+        <div class="input-group">
+            <label>Method</label>
+            <select id="paymentMode">
+                <option value="Online">UPI / Online</option>
+                <option value="Cash">Cash</option>
+            </select>
+        </div>
+    </div>
 
-<input type="number" id="advanceAmount" placeholder="Enter Amount ₹" style="width:200px; margin-left:15px;">
-<button class="advanceBtn" onclick="generateAdvanceQR('advance')">Advance QR</button>
-<button class="advanceBtn" onclick="generateAdvanceQR('full')">Full Payment QR</button>
+    <button class="btn-action btn-main" onclick="generateInvoice()">
+        Authorize & Generate Final Bill
+    </button>
 
-<div id="advancePreview"></div>
-<div id="billPreview" style="margin-top:30px;"></div>
+    <div id="afterButtons" style="display: none; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+        <button class="btn-action btn-success" onclick="shareWhatsApp()">Share WhatsApp</button>
+        <button class="btn-action btn-outline" onclick="downloadInvoice()">Save PNG Image</button>
+    </div>
 
-<div id="afterButtons" style="display:none;">
-<button class="download" onclick="downloadBill()">Download</button>
-<button class="secondary" onclick="shareWhatsApp()">WhatsApp</button>
-<button class="thermal" onclick="window.print()">Print</button>
-</div>
-
+    <div id="invoiceArea" class="invoice-outer"></div>
+    <datalist id="itemsData"></datalist>
 </div>
 
 <script>
-const UPI_ID="tinu01jmp@oksbi";
-let advanceUpiLink="";
-let billUpiLink="";
-const SHEET_API="https://script.google.com/macros/s/AKfycbz7L7LsHuTui703d62Yt4PO4Wtw69a4ALM-eVJqJmalwYcygLgq6EPPS8kuwRQNh28dcQ/exec";
+    const UPI_ID = "tinu01jmp@oksbi";
+    const SHEET_API = "https://script.google.com/macros/s/AKfycbz7L7LsHuTui703d62Yt4PO4Wtw69a4ALM-eVJqJmalwYcygLgq6EPPS8kuwRQNh28dcQ/exec";
 
-const services=[
-{name:"Single Page Poster",price:349},
-{name:"Signature Poster Design",price:499},
-{name:"Duo Poster Pack (2 Designs)",price:649},
-{name:"Trio Poster Pack (3 Designs)",price:949},
-{name:"Ultimate Poster Pack (4 Designs)",price:1199},
-{name:"Classic Single Page Invitation",price:499},
-{name:"Luxury Single Page Invitation",price:649},
-{name:"Grand 4-Page Wedding Invitation",price:999},
-{name:"Additional Page (Add-On)",price:299},
-{name:"Essential Logo Design",price:999},
-{name:"Elite Logo Design",price:1299},
-{name:"Single Page Menu Design",price:549},
-{name:"Double Page Menu Design",price:849},
-{name:"Banner / Flex Designing (Per Feet)",price:49},
-{name:"Social Media Post Design",price:249}
-];
+    // UPDATED INVENTORY FROM REVISED PRICE LIST
+    const inventory = [
+        // Poster Design Plans
+        {name:"Classic Poster Design", price:499, gst:18},
+        {name:"Premium Poster Design", price:799, gst:18},
+        {name:"Duo Business Pack (2 Designs)", price:1199, gst:18},
+        {name:"Trio Growth Pack (3 Designs)", price:1799, gst:18},
+        {name:"Ultimate Branding Pack (4 Designs)", price:2399, gst:18},
+        // Invitation Card Design
+        {name:"Classic Single Page Invitation", price:699, gst:18},
+        {name:"Luxury Single Page Invitation", price:999, gst:18},
+        {name:"Grand 4-Page Wedding Invitation", price:1499, gst:18},
+        {name:"Additional Page (Invitation)", price:399, gst:18},
+        // Logo Designing
+        {name:"Essential Logo Identity", price:1499, gst:18},
+        {name:"Elite Brand Logo Package", price:2999, gst:18},
+        // Menu Designing
+        {name:"Single Page Menu", price:799, gst:18},
+        {name:"Double Page Menu", price:1299, gst:18},
+        // Banner / Flex
+        {name:"Banner / Flex Design (Per Feet)", price:79, gst:18},
+        // Social Media
+        {name:"Premium Social Post Design", price:399, gst:18}
+    ];
 
-// --- ADD SERVICE ROW WITH REMOVE BUTTON ---
-function addRow(){
-  let div=document.createElement("div");
-  div.className="itemRow";
-
-  let options="";
-  services.forEach((service,index)=>{
-    options+=`<option value="${index}">${service.name} - ₹${service.price}</option>`;
-  });
-
-  div.innerHTML=`
-    <select class="serviceSelect">${options}</select>
-    <input type="number" class="qty" value="1" min="1">
-    <button class="removeBtn" onclick="removeRow(this)">×</button>
-  `;
-  document.getElementById("items").appendChild(div);
-  updateTotal();
-}
-
-// --- REMOVE SERVICE ROW ---
-function removeRow(btn){
-  btn.parentElement.remove();
-  updateTotal();
-}
-
-// --- UPDATE TOTAL ---
-function updateTotal(){
-  let total=0;
-  document.querySelectorAll(".itemRow").forEach(row=>{
-    let idx=row.querySelector(".serviceSelect").value;
-    let qty=parseFloat(row.querySelector(".qty").value)||1;
-    total+=services[idx].price*qty;
-  });
-  document.getElementById("totalPreview").innerText="Total: ₹"+total.toFixed(2);
-}
-document.addEventListener("input", e=>{
-  if(e.target.classList.contains("qty") || e.target.classList.contains("serviceSelect")){
-    updateTotal();
-  }
-});
-
-addRow(); // initial row
-
-// --- FETCH CLIENT DETAILS ---
-async function fetchClient(){
-  let phone=document.getElementById("mobile").value.replace(/\D/g,"");
-  if(phone.length===10) phone="91"+phone;
-  
-  try{
-    const res=await fetch(SHEET_API,{
-      method:'POST',
-      body:JSON.stringify({action:"getClient",phone})
-    });
-    const data=await res.json();
-
-    let popup=document.getElementById("clientDetails");
-    popup.innerHTML="";
-    if(data.found){
-      popup.innerHTML=`
-      <div class="clientPopup">
-        <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Total Bill:</strong> ₹${data.totalBill}</p>
-        <p><strong>Total Paid:</strong> ₹${data.totalPaid}</p>
-        <p><strong>Total Due:</strong> ₹${data.totalDue}</p>
-        <p><strong>Last Updated:</strong> ${data.lastUpdated||"N/A"}</p>
-      </div>`;
-      document.getElementById("customer").value=data.name;
-    }else{
-      popup.innerHTML=`<p>Client not found, you can add new.</p>`;
+    function closeTutorial() {
+        document.getElementById('tutorialOverlay').style.display = 'none';
+        localStorage.setItem('tut_seen', 'true');
     }
-  }catch(err){
-    console.error(err);
-    alert("Error fetching client from Sheet.");
-  }
-}
 
-// --- ADVANCE / FULL PAYMENT QR ---
-function generateAdvanceQR(type){
-  let customer=document.getElementById("customer").value || "N/A";
-  let rows=document.querySelectorAll(".itemRow");
-  let subtotal=0;
-  rows.forEach(row=>{
-    let serviceIndex=row.querySelector(".serviceSelect").value;
-    let service=services[serviceIndex];
-    let qty=parseFloat(row.querySelector(".qty").value)||1;
-    subtotal+=service.price*qty;
-  });
-  let amount=0,title="";
-  if(type==="full"){ amount=subtotal; title="FULL PAYMENT REQUEST"; }
-  else{ amount=parseFloat(document.getElementById("advanceAmount").value)||0; if(amount<=0){ alert("Enter Advance"); return; } title="ADVANCE PAYMENT REQUEST"; }
-
-  advanceUpiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${amount.toFixed(2)}&cu=INR`;
-  let date=new Date().toLocaleDateString();
-  let receiptHTML=`
-  <div class="invoice">
-    <h3 style="text-align:center;">${title}</h3>
-    <hr>
-    <p><strong>Customer:</strong> ${customer}</p>
-    <p><strong>Amount:</strong> ₹${amount.toFixed(2)}</p>
-    <p><strong>Date:</strong> ${date}</p>
-    <div id="advanceQR" style="margin-top:15px;"></div>
-    <br>
-    <button class="secondary" onclick="shareAdvanceWhatsApp('${amount.toFixed(2)}','${title}')">Share WhatsApp</button>
-  </div>`;
-  document.getElementById("advancePreview").innerHTML=receiptHTML;
-  new QRCode(document.getElementById("advanceQR"), advanceUpiLink);
-}
-
-function shareAdvanceWhatsApp(amount,title){
-  let mobile=document.getElementById("mobile").value.replace(/\D/g,"");
-  if(mobile.length===10) mobile="91"+mobile;
-  let message=`*ALGUM CREATIONS*\n${title}\nClient: ${document.getElementById("customer").value}\nAmount: ₹${amount}\nPayment Link: ${advanceUpiLink}`;
-  window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
-}
-
-// --- CREATE BILL AND POST TO SHEET ---
-async function createBill(){
-  let customer=document.getElementById("customer").value || "N/A";
-  let mobile=document.getElementById("mobile").value.replace(/\D/g,"")||"N/A";
-  if(mobile.length===10) mobile="91"+mobile;
-
-  let paymentMode=document.getElementById("paymentMode").value;
-  let paid=parseFloat(document.getElementById("paidAmount").value)||0;
-  let discount=parseFloat(document.getElementById("discount").value)||0;
-
-  let rows=document.querySelectorAll(".itemRow");
-  let subtotal=0;
-  let tableHTML="<table><tr><th>Service</th><th>Qty</th><th>Price</th><th>Total</th></tr>";
-  rows.forEach(row=>{
-    let serviceIndex=row.querySelector(".serviceSelect").value;
-    let service=services[serviceIndex];
-    let qty=parseFloat(row.querySelector(".qty").value)||1;
-    let amount=service.price*qty;
-    subtotal+=amount;
-    tableHTML+=`<tr><td>${service.name}</td><td>${qty}</td><td>₹${service.price}</td><td>₹${amount}</td></tr>`;
-  });
-  tableHTML+="</table>";
-
-  let total=subtotal-discount;
-  let balance=total-paid;
-  let status=balance<=0?"PAID":paid>0?"PARTIAL":"DUE";
-
-  let date=new Date().toLocaleDateString();
-  let invoiceNo="AC-"+Date.now().toString().slice(-6);
-
-  // --- BUILD BILL HTML ---
-  let billHTML=`
-  <div id="finalBill" class="invoice">
-    <div class="statusBadge ${status==="PAID"?"paid":status==="PARTIAL"?"partial":"due"}">${status}</div>
-    <h2 style="text-align:center;">ALGUM CREATIONS</h2>
-    <p style="text-align:center;">One Stop Solution For Digital Business</p>
-    <hr>
-    <p><strong>Invoice No:</strong> ${invoiceNo}</p>
-    <p><strong>Date:</strong> ${date}</p>
-    <p><strong>Client:</strong> ${customer}</p>
-    <p><strong>Mobile:</strong> ${mobile}</p>
-    <p><strong>Payment Mode:</strong> ${paymentMode}</p>
-    ${tableHTML}
-    <div class="totalBox">
-      Subtotal: ₹${subtotal.toFixed(2)}<br>
-      Discount: ₹${discount.toFixed(2)}<br>
-      Grand Total: ₹${total.toFixed(2)}<br>
-      Paid: ₹${paid.toFixed(2)}<br>
-      Balance: ₹${balance.toFixed(2)}
-    </div>
-    ${balance>0?`<div style="margin-top:20px;text-align:center;"><h3>Scan to Pay ₹${balance.toFixed(2)}</h3><div id="billQR"></div></div>`:""}
-  </div>`;
-  document.getElementById("billPreview").innerHTML=billHTML;
-  document.getElementById("afterButtons").style.display="block";
-
-  if(balance>0){
-    billUpiLink=`upi://pay?pa=${UPI_ID}&pn=Algum%20Creations&am=${balance.toFixed(2)}&cu=INR`;
-    new QRCode(document.getElementById("billQR"), billUpiLink);
-  }
-
-  window.billData={customer,mobile,total,status};
-
-  // --- POST TO GOOGLE SHEET ---
-  try{
-    const res=await fetch(SHEET_API,{
-      method:'POST',
-      body:JSON.stringify({action:"addBill",phone:mobile,name:customer,amount:total})
-    });
-    const data=await res.json();
-    if(data.success) console.log("Bill added ✅");
-    else console.warn("Failed to add bill");
-    if(paid>0){
-      const payRes=await fetch(SHEET_API,{
-        method:'POST',
-        body:JSON.stringify({action:"addPayment",phone:mobile,amount:paid,mode:paymentMode})
-      });
-      const payData=await payRes.json();
-      if(payData.success) console.log("Payment added ✅");
+    function showToast(m) {
+        const t = document.getElementById('toast');
+        t.innerText = m; t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 2500);
     }
-  }catch(err){ console.error("Sheet update error:",err);}
-}
 
-function downloadBill(){
-  html2canvas(document.getElementById("finalBill")).then(canvas=>{
-    let link=document.createElement("a");
-    link.download="Algum_Creations_Invoice.png";
-    link.href=canvas.toDataURL();
-    link.click();
-  });
-}
+    function toggleTheme() {
+        const b = document.body;
+        const next = b.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        b.setAttribute('data-theme', next);
+        localStorage.setItem('gks_theme', next);
+    }
 
-function shareWhatsApp(){
-  let data=window.billData;
-  if(!data){ alert("Generate Invoice First"); return; }
-  let mobile=data.mobile.replace(/\D/g,"");
-  if(mobile.length===10) mobile="91"+mobile;
-  let message=`*ALGUM CREATIONS*\nInvoice Status: ${data.status}\nTotal: ₹${data.total}\n${data.status!=="PAID"?"Payment Link:\n"+billUpiLink+"\n":""}`;
-  window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(message)}`,"_blank");
-}
+    function clearForm() {
+        if(confirm("Are you sure you want to clear all fields?")) {
+            document.getElementById('itemsContainer').innerHTML = "";
+            document.getElementById('customer').value = "";
+            document.getElementById('mobile').value = "";
+            document.getElementById('discount').value = "0";
+            document.getElementById('paidAmount').value = "0";
+            document.getElementById('quickPayAmount').value = "";
+            document.getElementById('clientDetails').innerHTML = "";
+            document.getElementById('afterButtons').style.display = 'none';
+            document.getElementById('invoiceArea').style.display = 'none';
+            document.getElementById('quickQRContainer').innerHTML = "";
+            addItemRow();
+            localStorage.removeItem('gks_bill_draft');
+            showToast("Form cleared!");
+        }
+    }
+
+    function init() {
+        if(localStorage.getItem('tut_seen') === 'true') {
+            document.getElementById('tutorialOverlay').style.display = 'none';
+        }
+
+        document.body.setAttribute('data-theme', localStorage.getItem('gks_theme') || 'light');
+        document.getElementById('billDate').valueAsDate = new Date();
+        const dl = document.getElementById('itemsData');
+        inventory.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.name;
+            dl.appendChild(opt);
+        });
+        if(!loadDraft()) addItemRow();
+    }
+
+    function addItemRow(data = {name: "", qty: 1, rate: 0}) {
+        const container = document.getElementById('itemsContainer');
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+            <input type="text" list="itemsData" class="row-name" value="${data.name}" placeholder="Service Name..." oninput="handleAuto(this)">
+            <input type="number" class="row-qty" value="${data.qty}" step="0.1" oninput="updateCalculations()">
+            <input type="number" class="row-rate" value="${data.rate}" placeholder="Rate" oninput="updateCalculations()">
+            <button class="btn-remove" onclick="this.parentElement.remove(); updateCalculations();">×</button>
+        `;
+        container.appendChild(row);
+        updateCalculations();
+    }
+
+    function handleAuto(input) {
+        const match = inventory.find(i => i.name === input.value);
+        if(match) {
+            input.parentElement.querySelector('.row-rate').value = match.price;
+            updateCalculations();
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+        saveDraft();
+    }
+
+    function updateCalculations() {
+        let subtotal = 0, totalTax = 0;
+        const applyGst = document.getElementById('gstEnabled').checked;
+
+        document.querySelectorAll('.item-row').forEach(row => {
+            const n = row.querySelector('.row-name').value;
+            const q = parseFloat(row.querySelector('.row-qty').value) || 0;
+            const r = parseFloat(row.querySelector('.row-rate').value) || 0;
+            const lineAmt = q * r;
+            subtotal += lineAmt;
+            if(applyGst) {
+                const item = inventory.find(i => i.name === n);
+                if(item && item.gst > 0) totalTax += (lineAmt * item.gst) / 100;
+            }
+        });
+
+        const disc = parseFloat(document.getElementById('discount').value) || 0;
+        const rawNet = subtotal + totalTax - disc;
+        const finalNet = Math.round(rawNet);
+        const roundOff = (finalNet - rawNet).toFixed(2);
+
+        document.getElementById('txtSubtotal').innerText = `₹${subtotal.toFixed(2)}`;
+        document.getElementById('txtTax').innerText = `₹${totalTax.toFixed(2)}`;
+        document.getElementById('txtDiscount').innerText = `-₹${disc.toFixed(2)}`;
+        document.getElementById('txtRound').innerText = `₹${roundOff}`;
+        document.getElementById('txtGrandTotal').innerText = `₹${finalNet.toFixed(2)}`;
+
+        if(document.activeElement.id === 'quickPayAmount') {
+            document.getElementById('paidAmount').value = document.getElementById('quickPayAmount').value;
+        }
+        saveDraft();
+        return { subtotal, totalTax, disc, finalNet, roundOff };
+    }
+
+    function generateQuickQR(type) {
+        const calc = updateCalculations();
+        let amt = type === 'full' ? calc.finalNet : (parseFloat(document.getElementById('quickPayAmount').value) || 0);
+        if(amt < 0) return showToast("Invalid amount");
+        
+        document.getElementById('paidAmount').value = amt;
+        const upi = `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${amt.toFixed(2)}&cu=INR`;
+        const cont = document.getElementById('quickQRContainer');
+        cont.innerHTML = `<p style="font-size:12px; font-weight:800; margin-bottom:10px;">Payment QR for ₹${amt}</p><div id="qQR" style="display:inline-block; padding:10px; background:white; border-radius:12px; border:2px solid var(--brand);"></div>`;
+        new QRCode(document.getElementById('qQR'), { text: upi, width: 140, height: 140 });
+        if (navigator.vibrate) navigator.vibrate(50);
+    }
+
+    async function fetchClient() {
+        let rawPhone = document.getElementById('mobile').value.replace(/\D/g,"");
+        if(rawPhone.length < 10) return showToast("Enter 10 digit number");
+        let phone = "91" + rawPhone;
+        const btn = document.getElementById('fetchBtn');
+        btn.innerText = "Syncing..."; btn.disabled = true;
+
+        try {
+            const res = await fetch(SHEET_API, { method: 'POST', body: JSON.stringify({ action: "getClient", phone }) });
+            const data = await res.json();
+            const div = document.getElementById('clientDetails');
+            if(data.found) {
+                div.innerHTML = `<div style="background:var(--brand-soft); padding:15px; border-radius:14px; border:1px solid var(--brand); margin-bottom:15px;"><div style="font-weight:800; color:var(--brand);">${data.name}</div><div style="font-size:11px; color:var(--text-soft);">PAST DUE: <span style="color:var(--danger); font-weight:800;">₹${data.totalDue}</span></div></div>`;
+                document.getElementById('customer').value = data.name;
+                showToast("Data Fetched!");
+            } else {
+                div.innerHTML = `<p style="font-size:11px; color:var(--text-soft); padding:10px;">New customer - no history.</p>`;
+            }
+        } catch(e) { showToast("Sync Error"); } 
+        finally { btn.innerText = "Sync Database"; btn.disabled = false; }
+    }
+
+    async function generateInvoice() {
+        const calc = updateCalculations();
+        const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
+        const balance = calc.finalNet - paid;
+        const status = balance <= 0 ? "PAID" : "UDHAAR / DUE";
+        const invNo = "AC-" + Date.now().toString().slice(-6);
+        const mobile = document.getElementById('mobile').value;
+        const customer = document.getElementById('customer').value || "Customer";
+
+        let rowsHtml = "";
+        document.querySelectorAll('.item-row').forEach(row => {
+            const n = row.querySelector('.row-name').value;
+            const q = row.querySelector('.row-qty').value;
+            const r = row.querySelector('.row-rate').value;
+            if(n) rowsHtml += `<tr><td>${n}</td><td>${q}</td><td>${r}</td><td>${(q*r).toFixed(2)}</td></tr>`;
+        });
+
+        const area = document.getElementById('invoiceArea');
+        area.style.display = 'block';
+        area.innerHTML = `
+            <div id="captureNode" class="invoice-card">
+                <div class="inv-badge">${status}</div>
+                <div style="text-align:center; margin-bottom:30px;">
+                    <h2 style="margin:0; font-size:26px; color:#6366f1;">ALGUM CREATIONS</h2>
+                    <p style="font-size:10px; margin:4px 0;">Creative Design · Branding · Digital Solutions</p>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:20px;">
+                    <div><b>Billed To:</b> ${customer}<br><b>Ph:</b> +91 ${mobile}</div>
+                    <div style="text-align:right;"><b>Inv:</b> #${invNo}<br><b>Date:</b> ${new Date().toLocaleDateString()}</div>
+                </div>
+                <table class="inv-table"><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th>Total</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+                
+                <table class="inv-breakdown-table">
+                    <tr><td>Subtotal:</td><td style="text-align:right;">₹${calc.subtotal.toFixed(2)}</td></tr>
+                    <tr><td>Tax (GST):</td><td style="text-align:right;">₹${calc.totalTax.toFixed(2)}</td></tr>
+                    <tr><td>Discount:</td><td style="text-align:right;">-₹${calc.disc.toFixed(2)}</td></tr>
+                    <tr><td>Round-off:</td><td style="text-align:right;">₹${calc.roundOff}</td></tr>
+                    <tr class="grand-total"><td>TOTAL:</td><td style="text-align:right;">₹${calc.finalNet.toFixed(2)}</td></tr>
+                    <tr><td>Paid Amt:</td><td style="text-align:right;">₹${paid}</td></tr>
+                    <tr style="color:red; font-weight:800;"><td>Remaining:</td><td style="text-align:right;">₹${balance.toFixed(2)}</td></tr>
+                </table>
+                <div style="clear:both; text-align:center; margin-top:40px;"><div id="finalQR"></div><p style="font-size:10px; margin-top:10px;">Thank you for choosing Algum Creations!</p></div>
+            </div>`;
+
+        if(balance > 0) new QRCode(document.getElementById('finalQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, width: 100, height: 100 });
+        
+        document.getElementById('afterButtons').style.display = 'grid';
+        area.scrollIntoView({ behavior: 'smooth' });
+
+        try {
+            const phone = "91" + mobile.replace(/\D/g,"");
+            await fetch(SHEET_API, { method:'POST', body:JSON.stringify({action:"addBill", phone, name:customer, amount:calc.finalNet}) });
+            if(paid > 0) await fetch(SHEET_API, { method:'POST', body:JSON.stringify({action:"addPayment", phone, amount:paid, mode:document.getElementById('paymentMode').value}) });
+        } catch(e) { }
+    }
+
+    function shareWhatsApp() {
+        const name = document.getElementById('customer').value || "Customer";
+        const mobile = document.getElementById('mobile').value;
+        const total = document.getElementById('txtGrandTotal').innerText;
+        const paid = document.getElementById('paidAmount').value;
+        const balance = (parseFloat(total.replace('₹','')) - parseFloat(paid)).toFixed(2);
+        
+        let itemsList = "";
+        document.querySelectorAll('.item-row').forEach((row, index) => {
+            const n = row.querySelector('.row-name').value;
+            const q = row.querySelector('.row-qty').value;
+            const r = row.querySelector('.row-rate').value;
+            if(n) itemsList += `${index + 1}. *${n}* (${q} x ₹${r})\n`;
+        });
+
+        let msg = `🎨 *ALGUM CREATIONS*\n👤 Customer: *${name}*\n--------------------------\n📐 *SERVICES:*\n${itemsList}--------------------------\n💰 Total: *${total}*\n✅ Paid: *₹${paid}*\n`;
+        if(balance > 0) msg += `🔴 *Due: ₹${balance}*\nPay via UPI: upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance}&cu=INR\n`;
+        else msg += `🟢 Status: *FULLY PAID*\n`;
+        msg += `_Creative Design · Branding · Digital Solutions_`;
+        
+        window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(msg)}`);
+    }
+
+    function downloadInvoice() {
+        html2canvas(document.getElementById("captureNode"), { scale: 3 }).then(canvas => {
+            const a = document.createElement("a");
+            a.download = `Algum_Bill_${Date.now()}.png`; a.href = canvas.toDataURL(); a.click();
+        });
+    }
+
+    function saveDraft() {
+        const items = [];
+        document.querySelectorAll('.item-row').forEach(row => items.push({name: row.querySelector('.row-name').value, qty: row.querySelector('.row-qty').value, rate: row.querySelector('.row-rate').value}));
+        localStorage.setItem('gks_bill_draft', JSON.stringify({name: document.getElementById('customer').value, mob: document.getElementById('mobile').value, items}));
+    }
+
+    function loadDraft() {
+        const saved = localStorage.getItem('gks_bill_draft');
+        if(!saved) return false;
+        const d = JSON.parse(saved);
+        document.getElementById('customer').value = d.name || "";
+        document.getElementById('mobile').value = d.mob || "";
+        if(d.items?.length) d.items.forEach(i => addItemRow(i));
+        return !!d.items?.length;
+    }
+
+    window.onload = init;
 </script>
 </body>
 </html>
+
