@@ -73,6 +73,9 @@
         input, select { padding: 14px; border-radius: 16px; border: 1.5px solid var(--border); font-size: 16px; outline: none; background: var(--card); color: var(--text); width: 100%; box-shadow: var(--shadow-sm); }
         input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
 
+        /* File Input Styling */
+        input[type="file"] { padding: 10px; font-size: 12px; background: var(--brand-soft); border: 2px dashed var(--brand); }
+
         .mobile-input-wrapper { display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 16px; background: var(--card); overflow: hidden; box-shadow: var(--shadow-sm); }
         .mobile-prefix { background: var(--brand-soft); color: var(--brand); font-weight: 800; padding: 14px 18px; border-right: 1.5px solid var(--border); }
         .mobile-input-wrapper input { border: none; border-radius: 0; box-shadow: none; }
@@ -206,6 +209,14 @@
         <div class="input-group">
             <label>Bill Date</label>
             <input type="date" id="billDate">
+        </div>
+    </div>
+
+    <!-- Media Picker Integration -->
+    <div class="grid">
+        <div class="input-group" style="grid-column: span 2;">
+            <label>Attach Client Design (Optional)</label>
+            <input type="file" id="designFile" accept="image/*,.pdf">
         </div>
     </div>
 
@@ -343,6 +354,7 @@
             document.getElementById('paidAmount').value = "0";
             document.getElementById('quickPayAmount').value = "";
             document.getElementById('clientDetails').innerHTML = "";
+            document.getElementById('designFile').value = "";
             document.getElementById('afterButtons').style.display = 'none';
             document.getElementById('invoiceArea').style.display = 'none';
             document.getElementById('quickQRContainer').innerHTML = "";
@@ -546,7 +558,7 @@
         } catch(e) { }
     }
 
-    function shareWhatsApp() {
+    async function shareWhatsApp() {
         const name = document.getElementById('customer').value || "Client";
         const mobile = document.getElementById('mobile').value;
         const total = document.getElementById('txtGrandTotal').innerText;
@@ -566,7 +578,42 @@
         else msg += `🟢 *Status:* FULLY PAID\n`;
         msg += `\n_Thank you for choosing Algum Creations!_`;
         
-        window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(msg)}`);
+        // --- NEW FILE SHARING LOGIC ---
+        showToast("Preparing files for sharing...");
+        const node = document.getElementById("captureNode");
+        
+        try {
+            // Generate Invoice PNG
+            const canvas = await html2canvas(node, { scale: 3, backgroundColor: '#ffffff' });
+            const dataUrl = canvas.toDataURL("image/png");
+            const blob = await (await fetch(dataUrl)).blob();
+            const invoiceFile = new File([blob], `Invoice_${name.replace(/\s+/g, '_')}.png`, { type: "image/png" });
+
+            const shareFiles = [invoiceFile];
+            
+            // Check for design file attachment
+            const designInput = document.getElementById('designFile');
+            if(designInput.files && designInput.files[0]) {
+                shareFiles.push(designInput.files[0]);
+            }
+
+            // Attempt Web Share (Works on most mobile browsers)
+            if (navigator.canShare && navigator.canShare({ files: shareFiles })) {
+                await navigator.share({
+                    files: shareFiles,
+                    title: 'Algum Creations Invoice',
+                    text: msg
+                });
+                showToast("Shared Successfully!");
+            } else {
+                // Fallback to text link if sharing files is not supported
+                window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(msg)}`);
+            }
+        } catch (err) {
+            console.error(err);
+            // Absolute fallback
+            window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(msg)}`);
+        }
     }
 
     function downloadInvoice() {
