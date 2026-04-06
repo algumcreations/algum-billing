@@ -100,7 +100,7 @@
 
         .invoice-outer { margin-top: 40px; display: none; }
         .invoice-card { width: 750px; margin: 0 auto; background: white; padding: 50px; color: #0f172a; position: relative; border-radius: 0; border: 1px solid #e2e8f0; }
-        .inv-badge { position: absolute; top: 40px; right: 50px; padding: 6px 16px; border-radius: 40px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+        .inv-badge { position: absolute; top: 40px; right: 50px; padding: 6px 18px; border-radius: 40px; font-size: 12px; font-weight: 800; text-transform: uppercase; }
         .badge-paid { background: #dcfce7; color: #15803d; }
         .badge-due { background: #fee2e2; color: #dc2626; }
         
@@ -143,9 +143,9 @@
         <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;">
             <p style="margin:0; font-size: 13px; line-height: 1.5;">1. <b>Client Sync:</b> Mobile number se purana data fetch karein.</p>
             <p style="margin:0; font-size: 13px; line-height: 1.5;">2. <b>Smart Cart:</b> Service select karein, rate auto-fill hoga.</p>
-            <p style="margin:0; font-size: 13px; line-height: 1.5;">3. <b>Full Share:</b> Ab Invoice PNG aur details dono ek sath share hongi.</p>
+            <p style="margin:0; font-size: 13px; line-height: 1.5;">3. <b>WhatsApp Direct:</b> Ab seedha usi number par message jayega.</p>
         </div>
-        <button class="btn-action btn-main" onclick="closeTutorial()">Chalo Shuru Karein!</button>
+        <button class="btn-action btn-main" onclick="closeTutorial()">Let's Go!</button>
     </div>
 </div>
 
@@ -163,7 +163,7 @@
         </div>
     </div>
 
-    <!-- Client -->
+    <!-- Step 1: Customer Profile -->
     <span class="section-label">1. Customer Profile</span>
     <div class="grid">
         <div class="input-group">
@@ -190,21 +190,19 @@
         </div>
     </div>
 
-    <!-- Media -->
     <div class="media-picker-container">
         <label style="color: var(--brand); font-size: 11px; margin-bottom: 5px; display: block;">ATTACH CLIENT DESIGNS</label>
         <input type="file" id="mediaPicker" multiple accept="image/*" style="padding: 10px; border: none; font-size: 12px; width: 100%;" onchange="handleFileSelect()">
         <div id="fileListPreview" class="file-list-preview">No files selected</div>
     </div>
 
-    <!-- Services -->
+    <!-- Step 2: Service Selection -->
     <span class="section-label">2. Service Selection</span>
     <div class="item-list">
         <div id="itemsContainer"></div>
         <button class="btn-outline" style="width: 100%; border: 2px dashed var(--border); padding: 15px; margin-top: 10px; border-radius: 18px; cursor: pointer; font-weight: 700; color: var(--text-soft); background: transparent;" onclick="addItemRow()">+ Add New Service</button>
     </div>
 
-    <!-- GST -->
     <div class="gst-toggle-card">
         <div style="display: flex; align-items: center; gap: 12px;">
             <div style="width: 40px; height: 40px; background: var(--card); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;">📊</div>
@@ -219,7 +217,6 @@
         </label>
     </div>
 
-    <!-- Breakdown -->
     <div class="breakdown-card">
         <div class="breakdown-row"><span>Total Amount:</span><span id="txtSubtotal">₹0.00</span></div>
         <div class="breakdown-row"><span>Tax (GST 18%):</span><span id="txtTax">₹0.00</span></div>
@@ -231,7 +228,6 @@
         </div>
     </div>
 
-    <!-- Quick Pay -->
     <div class="quick-pay-section">
         <div class="quick-pay-label">Smart Payment Widget</div>
         <input type="number" id="quickPayAmount" placeholder="Amount to Pay" oninput="updateCalculations()">
@@ -242,7 +238,7 @@
         <div id="quickQRContainer" style="text-align: center; margin-top: 25px;"></div>
     </div>
 
-    <!-- Finance -->
+    <!-- Step 3: Authorization -->
     <span class="section-label">3. Billing Authorization</span>
     <div class="grid" style="grid-template-columns: 1fr 1fr 1.2fr;">
         <div class="input-group">
@@ -263,10 +259,10 @@
         </div>
     </div>
 
-    <button class="btn-action btn-main" onclick="generateInvoice()" style="height: 60px; font-size: 17px; margin-top: 30px;">Authorize & Generate Final Invoice</button>
+    <button class="btn-action btn-main" onclick="generateInvoice()" style="height: 60px; font-size: 17px; margin-top: 30px;">Generate Final Invoice</button>
 
     <div id="afterButtons" style="display: none; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px;">
-        <button class="btn-action" style="background: #25d366; color: white;" onclick="shareWhatsApp()">Share Full Invoice</button>
+        <button class="btn-action" style="background: #25d366; color: white;" onclick="shareWhatsApp()">Share on WhatsApp</button>
         <button class="btn-action" style="background: var(--text); color: white;" onclick="downloadInvoice()">Save Image</button>
     </div>
 
@@ -293,6 +289,7 @@
         {name:"Double Page Menu", price:1299, gst:18},
         {name:"Banner Design (Per Feet)", price:79, gst:18},
         {name:"Editing", price:259, gst:18},
+        {name:"Editing B1", price:100, gst:18},
         {name:"Monthly Poster Pack", price:3000, gst:18}
     ];
 
@@ -321,9 +318,7 @@
     }
 
     function clearForm() {
-        if(confirm("Full Reset?")) {
-            location.reload();
-        }
+        if(confirm("Full Reset?")) { location.reload(); }
     }
 
     function init() {
@@ -397,7 +392,6 @@
         const calc = updateCalculations();
         let amt = type === 'full' ? calc.finalNet : (parseFloat(document.getElementById('quickPayAmount').value) || 0);
         if(amt <= 0) return showToast("Enter amount");
-        
         const upi = `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${amt.toFixed(2)}&cu=INR`;
         const cont = document.getElementById('quickQRContainer');
         cont.innerHTML = `<div style="font-weight:800; margin-bottom:10px;">SCAN TO PAY ₹${amt}</div><div id="qQR" style="display:inline-block; padding:10px; background:white; border-radius:15px;"></div>`;
@@ -428,115 +422,126 @@
         const status = balance <= 0 ? "PAID" : "DUE";
         const invNo = "AC-" + Date.now().toString().slice(-6);
         const customer = document.getElementById('customer').value || "Valued Client";
+        const mobile = document.getElementById('mobile').value;
 
         let itemsHtml = "";
         document.querySelectorAll('.item-row').forEach(row => {
             const n = row.querySelector('.row-name').value;
             const q = row.querySelector('.row-qty').value;
             const r = row.querySelector('.row-rate').value;
-            if(n) itemsHtml += `<tr><td>${n}</td><td>${q}</td><td>₹${r}</td><td style="text-align:right;">₹${q*r}</td></tr>`;
+            if(n) itemsHtml += `<tr><td>${n}</td><td style="text-align:center;">${q}</td><td style="text-align:center;">₹${r}</td><td style="text-align:right; font-weight:700;">₹${q*r}</td></tr>`;
         });
 
         const area = document.getElementById('invoiceArea');
         area.style.display = 'block';
         area.innerHTML = `
-            <div id="captureNode" class="invoice-card">
+            <div id="captureNode" class="invoice-card" style="font-family: 'Plus Jakarta Sans', sans-serif;">
                 <div class="inv-badge ${balance<=0?'badge-paid':'badge-due'}">${status}</div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:40px;">
-                    <div><h2 style="margin:0; color:#4f46e5;">ALGUM CREATIONS</h2><p style="font-size:10px; margin:0;">DESIGN • BRANDING • SOLUTIONS</p></div>
-                    <div style="text-align:right;"><p style="margin:0; font-weight:800;">#${invNo}</p><p style="margin:0; font-size:11px;">${new Date().toLocaleDateString()}</p></div>
+                
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:40px;">
+                    <div>
+                        <h2 style="margin:0; font-size:32px; color:#4f46e5; font-weight:900;">ALGUM</h2>
+                        <h3 style="margin:0; font-size:18px; color:#1e293b; letter-spacing:1px;">CREATIONS</h3>
+                        <p style="font-size:10px; color:#64748b; margin-top:5px; font-weight:700;">DESIGN • BRANDING • SOLUTIONS</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <p style="margin:0; font-size:12px; font-weight:700; color:#64748b;">INV NO.</p>
+                        <p style="margin:2px 0; font-size:22px; font-weight:900;">#${invNo}</p>
+                        <p style="margin:5px 0 0; font-size:11px; color:#64748b;">DATE: ${new Date().toLocaleDateString('en-GB')}</p>
+                    </div>
                 </div>
-                <div style="margin-bottom:30px;">
-                    <p style="margin:0; font-size:10px; color:#64748b;">CLIENT:</p>
-                    <p style="margin:0; font-weight:800;">${customer} (+91 ${document.getElementById('mobile').value})</p>
+
+                <div style="margin-bottom:40px;">
+                    <p style="margin:0 0 5px; color:#64748b; font-weight:700; text-transform:uppercase; font-size:10px;">Billed To:</p>
+                    <p style="margin:0; font-weight:800; font-size:18px;">${customer}</p>
+                    <p style="margin:2px 0; color:#4f46e5; font-weight:700;">+91 ${mobile}</p>
                 </div>
+
                 <table class="inv-table">
-                    <thead><tr><th>Service</th><th>Qty</th><th>Rate</th><th style="text-align:right;">Total</th></tr></thead>
+                    <thead>
+                        <tr><th style="padding-left:0;">Description</th><th style="text-align:center;">Qty</th><th style="text-align:center;">Rate</th><th style="text-align:right;">Amount</th></tr>
+                    </thead>
                     <tbody>${itemsHtml}</tbody>
                 </table>
-                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                    <div id="finalQR"></div>
-                    <table style="width:220px; font-size:13px;">
-                        <tr><td>Subtotal</td><td style="text-align:right;">₹${calc.subtotal}</td></tr>
-                        <tr><td>GST (18%)</td><td style="text-align:right;">₹${calc.totalTax}</td></tr>
-                        <tr><td>Discount</td><td style="text-align:right; color:#ef4444;">-₹${calc.disc}</td></tr>
-                        <tr style="font-weight:900; font-size:18px;"><td>TOTAL</td><td style="text-align:right;">₹${calc.finalNet}</td></tr>
-                        <tr><td style="color:#10b981;">Paid (${mode})</td><td style="text-align:right;">₹${paid}</td></tr>
-                        <tr style="color:#ef4444; font-weight:800;"><td>Balance</td><td style="text-align:right;">₹${balance}</td></tr>
-                    </table>
+                
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:20px;">
+                    <div style="width:50%;">
+                        ${balance <= 0 ? 
+                            `<div style="padding:15px 25px; border:2px solid #dcfce7; border-radius:12px; color:#15803d; font-weight:800; font-size:18px; display:inline-flex; align-items:center; gap:10px;">✅ FULLY PAID</div>` 
+                            : `<div id="finalQR"></div><p style="font-size:10px; font-weight:800; color:#4f46e5; margin-top:5px;">SCAN TO PAY BALANCE</p>`}
+                    </div>
+                    <div style="width:40%;">
+                        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                            <tr><td style="padding:6px 0; color:#64748b;">Subtotal</td><td style="text-align:right; font-weight:700;">₹${calc.subtotal.toLocaleString()}</td></tr>
+                            <tr><td style="padding:6px 0; color:#64748b;">GST (18%)</td><td style="text-align:right; font-weight:700;">₹${calc.totalTax.toLocaleString()}</td></tr>
+                            <tr><td style="padding:6px 0; color:#64748b;">Discount</td><td style="text-align:right; font-weight:700; color:#ef4444;">-₹${calc.disc.toLocaleString()}</td></tr>
+                            <tr style="border-top:2px solid #1e293b;"><td style="padding:15px 0; font-weight:900; font-size:24px;">TOTAL</td><td style="text-align:right; font-weight:900; font-size:24px;">₹${calc.finalNet.toLocaleString()}</td></tr>
+                            <tr><td style="padding:5px 0; color:#10b981; font-weight:700;">Paid</td><td style="text-align:right; font-weight:700;">₹${paid.toLocaleString()}</td></tr>
+                            <tr style="color:#ef4444; font-weight:800;"><td>Due Balance</td><td style="text-align:right;">₹${balance.toLocaleString()}</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="margin-top:60px; padding-top:20px; border-top:1px solid #f1f5f9; text-align:center;">
+                    <p style="font-size:11px; color:#64748b; margin:0;">contact.algumcreations@gmail.com | +91 7352185767</p>
+                    <p style="font-size:10px; color:#94a3b8; margin-top:5px; font-weight:700;">Thank you for your business! Build with Excellence.</p>
                 </div>
             </div>`;
 
-        if(balance > 0) new QRCode(document.getElementById('finalQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, width: 100, height: 100 });
+        if(balance > 0) new QRCode(document.getElementById('finalQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, width: 110, height: 110 });
         document.getElementById('afterButtons').style.display = 'grid';
         area.scrollIntoView({ behavior: 'smooth' });
     }
 
     async function shareWhatsApp() {
-        const node = document.getElementById("captureNode");
-        if(!node) return showToast("Pehle Invoice Generate Karein!");
-
         const name = document.getElementById('customer').value || "Client";
-        const mob = document.getElementById('mobile').value;
+        let mobile = document.getElementById('mobile').value.replace(/\D/g,"");
         const total = document.getElementById('txtGrandTotal').innerText;
         const disc = document.getElementById('txtDiscount').innerText;
         const paid = document.getElementById('paidAmount').value;
         const mode = document.getElementById('paymentMode').value;
         const balance = (parseFloat(total.replace(/₹|,/g,'')) - parseFloat(paid)).toFixed(2);
+        
+        if(mobile.length < 10) return showToast("Invalid phone number");
 
-        showToast("Preparing Professional Invoice...");
+        let itemsList = "";
+        document.querySelectorAll('.item-row').forEach((row) => {
+            const n = row.querySelector('.row-name').value;
+            const q = row.querySelector('.row-qty').value;
+            const r = row.querySelector('.row-rate').value;
+            if(n) itemsList += `🔹 *${n}* (x${q}) - ₹${parseFloat(r).toLocaleString()}\n`;
+        });
 
-        // 1. Generate Image Blob for Sharing
-        const canvas = await html2canvas(node, { scale: 2, backgroundColor: '#ffffff' });
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-        const file = new File([blob], `Invoice_${name}.png`, { type: 'image/png' });
-
-        // 2. Prepare Professional Message
-        let msg = `🚀 *ALGUM CREATIONS - OFFICIAL INVOICE*\n`;
+        let msg = `🎨 *ALGUM CREATIONS - OFFICIAL INVOICE*\n`;
         msg += `-------------------------------------------\n`;
         msg += `👤 *Client:* ${name}\n`;
-        msg += `📱 *Mobile:* +91 ${mob}\n`;
+        msg += `📱 *Mobile:* +91 ${mobile}\n`;
         msg += `📅 *Date:* ${new Date().toLocaleDateString()}\n`;
         msg += `-------------------------------------------\n`;
-        msg += `💰 *FINANCIAL DETAILS:*\n`;
-        msg += `🔹 Total Amount: ${total}\n`;
-        msg += `🔴 Discount Applied: ${disc}\n`;
+        msg += `📦 *Services:*\n${itemsList}`;
         msg += `-------------------------------------------\n`;
-        msg += `💳 *PAYMENT STATUS:*\n`;
-        msg += `✅ Paid Amount: ₹${paid}\n`;
-        msg += `📑 Mode: ${mode}\n`;
+        msg += `💰 *FINANCIAL SUMMARY:*\n`;
+        msg += `🔹 Total: ${total}\n`;
+        msg += `🔴 Discount: ${disc}\n`;
+        msg += `-------------------------------------------\n`;
+        msg += `✅ *Paid:* ₹${paid} (${mode})\n`;
         
         if(balance > 0) {
             msg += `⚠️ *Balance Due: ₹${parseFloat(balance).toLocaleString()}*\n`;
-            msg += `\n🔗 *Pay Balance via UPI:*\nupi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance}&cu=INR\n`;
+            msg += `\n💳 *Pay via UPI:*\nupi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance}&cu=INR\n`;
         } else {
-            msg += `✨ *Status:* FULLY PAID\n`;
+            msg += `🟢 *Status:* FULLY PAID\n`;
         }
+        msg += `\n_Thank you for choosing Algum Creations!_`;
         
-        msg += `\n_Thank you for choosing Algum Creations!_\n_Build with Excellence._`;
-
-        // 3. Use Web Share API (Shared Image + Text)
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-                await navigator.share({
-                    files: [file],
-                    title: 'Algum Creations Invoice',
-                    text: msg
-                });
-            } catch (err) {
-                // Fallback to text only if user cancels or error
-                window.open(`https://wa.me/91${mob}?text=${encodeURIComponent(msg)}`);
-            }
-        } else {
-            // Fallback for browsers that don't support file sharing
-            window.open(`https://wa.me/91${mob}?text=${encodeURIComponent(msg)}`);
-            showToast("Note: Your browser doesn't support direct image sharing. Sending text only.");
-        }
+        // Direct wa.me link with mobile number
+        window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(msg)}`);
     }
 
     function downloadInvoice() {
         const node = document.getElementById("captureNode");
-        html2canvas(node, { scale: 3 }).then(canvas => {
+        showToast("Saving Invoice Image...");
+        html2canvas(node, { scale: 3, backgroundColor: '#ffffff' }).then(canvas => {
             const a = document.createElement("a");
             a.download = `Algum_Invoice_${Date.now()}.png`; a.href = canvas.toDataURL(); a.click();
         });
@@ -562,5 +567,4 @@
 </script>
 </body>
 </html>
-
 
