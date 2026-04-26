@@ -418,14 +418,19 @@
         const cont = document.getElementById('quickQRContainer');
         cont.innerHTML = `<div style="font-weight:800; margin-bottom:15px; font-size:14px;">SCAN TO PAY ₹${amt.toLocaleString()}</div><div id="qQR" style="display:inline-block; padding:20px; background:white; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.05);"></div>`;
         
-        // Use Canvas mode for better capture reliability
-        new QRCode(document.getElementById('qQR'), { 
-            text: upi, 
-            width: 160, 
-            height: 160,
-            useSVG: false,
-            correctLevel: QRCode.CorrectLevel.H
-        });
+        const qrc = new QRCode(document.getElementById('qQR'), { text: upi, width: 160, height: 160 });
+        
+        // Convert to static image after generation for preview reliability
+        setTimeout(() => {
+            const canv = document.querySelector('#qQR canvas');
+            if(canv) {
+                const img = document.createElement('img');
+                img.src = canv.toDataURL('image/png');
+                img.style.width = '160px';
+                canv.style.display = 'none';
+                document.getElementById('qQR').appendChild(img);
+            }
+        }, 300);
     }
 
     async function fetchClient() {
@@ -503,7 +508,7 @@
                 <div style="padding: 0 60px; display:flex; justify-content:space-between; align-items:flex-end;">
                     <div style="width:40%;">
                         ${balance > 0 ? 
-                            `<div id="finalQR" style="background:#fff; padding:15px; border-radius:20px; border:1px solid #f1f5f9; display:inline-block; min-height:120px; min-width:120px;"></div>
+                            `<div id="finalQR" style="background:#fff; padding:15px; border-radius:20px; border:1px solid #f1f5f9; display:inline-block;"></div>
                              <p style="font-size:10px; font-weight:800; color:#4f46e5; margin-top:10px; text-transform:uppercase; letter-spacing:1px;">Scan to Settle Balance</p>` 
                             : `<div style="background:#dcfce7; color:#15803d; padding:20px; border-radius:20px; text-align:center; border:2px solid #bbf7d0;">
                                 <div style="font-size:24px; margin-bottom:5px;">✓</div>
@@ -545,10 +550,21 @@
             new QRCode(document.getElementById('finalQR'), { 
                 text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, 
                 width: 120, 
-                height: 120,
-                useSVG: false, // Essential for GitHub capture
-                correctLevel: QRCode.CorrectLevel.M
+                height: 120 
             });
+            
+            // Convert to IMAGE tag so html2canvas can see it easily
+            setTimeout(() => {
+                const qrCanvas = document.querySelector('#finalQR canvas');
+                if(qrCanvas) {
+                    const dataUrl = qrCanvas.toDataURL("image/png");
+                    const img = document.createElement("img");
+                    img.src = dataUrl;
+                    img.style.width = "120px";
+                    qrCanvas.style.display = "none";
+                    document.getElementById('finalQR').appendChild(img);
+                }
+            }, 500);
         }
         
         document.getElementById('afterButtons').style.display = 'grid';
@@ -604,25 +620,31 @@
         const node = document.getElementById("captureNode");
         showToast("Rendering High-Res Image...");
         
-        // Extended options to fix disappearing QR on external domains (GitHub)
+        // Final sanity check: ensure image is there
+        const qrImg = document.querySelector('#finalQR img');
+        
         html2canvas(node, { 
             scale: 3, 
             backgroundColor: '#ffffff', 
-            useCORS: true, 
+            useCORS: true,
             allowTaint: true,
-            scrollX: 0,
-            scrollY: -window.scrollY, // Fix offset if page is scrolled
+            logging: false,
             onclone: (clonedDoc) => {
-                // Ensure visibility of capture area in cloned DOM
-                const capturedNode = clonedDoc.getElementById('captureNode');
-                capturedNode.style.display = 'block';
+                // Ensure the QR container is visible in the clone
+                const clonedQR = clonedDoc.getElementById('finalQR');
+                if(clonedQR) clonedQR.style.opacity = "1";
             }
         }).then(canvas => {
-            const a = document.createElement("a");
-            a.download = `Algum_Premium_Invoice_${Date.now()}.png`; 
-            a.href = canvas.toDataURL("image/png"); 
-            a.click();
-            showToast("Invoice saved successfully!");
+            try {
+                const a = document.createElement("a");
+                a.download = `Algum_Invoice_${Date.now()}.png`; 
+                a.href = canvas.toDataURL("image/png", 1.0); 
+                a.click();
+                showToast("Invoice saved successfully!");
+            } catch (err) {
+                console.error("Save Error:", err);
+                showToast("Error saving image. Try again.");
+            }
         });
     }
 
@@ -646,4 +668,5 @@
 </script>
 </body>
 </html>
+
 
