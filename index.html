@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,7 +75,35 @@
         .btn-sync { background: var(--brand-gradient); color: white; border: none; padding: 16px; border-radius: 18px; font-weight: 700; cursor: pointer; height: 56px; width: 100%; box-shadow: 0 8px 15px rgba(79, 70, 229, 0.3); }
         .btn-sync:active { transform: scale(0.98); }
 
-        .item-row { display: grid; grid-template-columns: 3fr 0.8fr 1fr 56px; gap: 15px; margin-bottom: 20px; align-items: center; background: var(--brand-soft); padding: 15px; border-radius: 20px; border: 1px solid var(--border); }
+        /* Updated item-row: service | qty | item-disc | rate | remove */
+        .item-row {
+            display: grid;
+            grid-template-columns: 2.5fr 0.7fr 0.85fr 1fr 56px;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+            background: var(--brand-soft);
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        /* Per-item discount input styling - orange tint to distinguish */
+        .row-item-disc {
+            border-color: #fed7aa !important;
+            background: #fff7ed !important;
+            color: #c2410c !important;
+        }
+        .row-item-disc:focus {
+            border-color: #f97316 !important;
+            box-shadow: 0 0 0 5px rgba(249,115,22,0.1) !important;
+        }
+        [data-theme="dark"] .row-item-disc {
+            background: rgba(249,115,22,0.1) !important;
+            color: #fb923c !important;
+            border-color: rgba(249,115,22,0.3) !important;
+        }
+
         .btn-remove { background: #fff; color: var(--danger); border: 2px solid #fee2e2; height: 50px; border-radius: 15px; cursor: pointer; font-weight: 800; font-size: 22px; }
         .btn-remove:hover { background: var(--danger); color: white; border-color: var(--danger); }
 
@@ -131,7 +158,10 @@
 
         @media (max-width: 600px) {
             .grid { grid-template-columns: 1fr; gap: 15px; }
-            .item-row { grid-template-columns: 1fr; gap: 12px; }
+            /* On mobile: stack item row as 2 columns */
+            .item-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .item-row .input-group:first-child { grid-column: 1 / -1; }
+            .btn-remove { grid-column: 2; justify-self: end; }
             .invoice-card { width: 100%; }
             .inv-header { padding: 30px; flex-direction: column; gap: 30px; }
             .inv-brand-box { margin-left: -30px; margin-top: -30px; }
@@ -150,7 +180,7 @@
     <div class="tut-card">
         <div style="margin-bottom: 30px;">
             <div style="width: 80px; height: 80px; background: var(--brand-soft); color: var(--brand); border-radius: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">💎</div>
-            <h2 style="margin:0; font-weight: 900; font-size: 28px; letter-spacing: -1px;">Algum Premium v3</h2>
+            <h2 style="margin:0; font-weight: 900; font-size: 28px; letter-spacing: -1px;">Algum Premium v4</h2>
             <p style="font-size: 13px; color: var(--text-soft); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">Next-Gen Billing Solution</p>
         </div>
         <div style="text-align: left; display: flex; flex-direction: column; gap: 20px; margin-bottom: 35px; background: var(--bg); padding: 25px; border-radius: 24px;">
@@ -164,6 +194,10 @@
             </div>
             <div style="display: flex; gap: 15px;">
                 <span style="background: var(--brand); color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</span>
+                <p style="margin:0; font-size: 14px; font-weight: 600;"><b>Per-Item Discount:</b> Apply individual discounts on each service.</p>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <span style="background: var(--brand); color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</span>
                 <p style="margin:0; font-size: 14px; font-weight: 600;"><b>WhatsApp Pro:</b> Send branded invoices directly.</p>
             </div>
         </div>
@@ -219,6 +253,16 @@
 
     <!-- Step 2: Service Selection -->
     <span class="section-label">2. Service Selection</span>
+
+    <!-- Column headers for item rows -->
+    <div style="display: grid; grid-template-columns: 2.5fr 0.7fr 0.85fr 1fr 56px; gap: 12px; padding: 0 15px; margin-bottom: 8px;">
+        <span style="font-size:10px; font-weight:800; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px;">Service</span>
+        <span style="font-size:10px; font-weight:800; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px;">Qty</span>
+        <span style="font-size:10px; font-weight:800; color:#c2410c; text-transform:uppercase; letter-spacing:1px;">Disc (₹)</span>
+        <span style="font-size:10px; font-weight:800; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px;">Rate (₹)</span>
+        <span></span>
+    </div>
+
     <div class="item-list">
         <div id="itemsContainer"></div>
         <button class="btn-outline" style="width: 100%; border: 2px dashed var(--border); padding: 18px; margin-top: 10px; border-radius: 20px; cursor: pointer; font-weight: 800; color: var(--text-soft); background: transparent; font-size: 14px;" onclick="addItemRow()">+ Add Service Row</button>
@@ -240,6 +284,7 @@
 
     <div class="breakdown-card">
         <div class="breakdown-row"><span>Cart Subtotal:</span><span id="txtSubtotal">₹0.00</span></div>
+        <div class="breakdown-row"><span>Item-wise Discount:</span><span id="txtItemDiscount">-₹0.00</span></div>
         <div class="breakdown-row"><span>Applied Tax (GST):</span><span id="txtTax">₹0.00</span></div>
         <div class="breakdown-row"><span>Agency Discount:</span><span id="txtDiscount">-₹0.00</span></div>
         <div class="breakdown-row"><span>Adjustment:</span><span id="txtRound">₹0.00</span></div>
@@ -312,8 +357,8 @@
         {name:"Editing", price:259, gst:18},
         {name:"Editing B1", price:100, gst:18},
         {name:"Algum Posters", price:200, gst:18},
-        {name:"Monthly Poster Pack", price:3000, gst:18},
-        {name:"Editing small", price:75, gst:18}
+        {name:"Small Editing", price:75, gst:18},
+        {name:"Monthly Poster Pack", price:3000, gst:18}
     ];
 
     function handleFileSelect() {
@@ -324,7 +369,7 @@
 
     function closeTutorial() {
         document.getElementById('tutorialOverlay').style.display = 'none';
-        localStorage.setItem('algum_tut_seen_v3', 'true');
+        localStorage.setItem('algum_tut_seen_v4', 'true');
     }
 
     function showToast(m) {
@@ -345,7 +390,7 @@
     }
 
     function init() {
-        if(localStorage.getItem('algum_tut_seen_v3') === 'true') document.getElementById('tutorialOverlay').style.display = 'none';
+        if(localStorage.getItem('algum_tut_seen_v4') === 'true') document.getElementById('tutorialOverlay').style.display = 'none';
         document.body.setAttribute('data-theme', localStorage.getItem('algum_theme') || 'light');
         document.getElementById('billDate').valueAsDate = new Date();
         const dl = document.getElementById('itemsData');
@@ -357,14 +402,24 @@
         if(!loadDraft()) addItemRow();
     }
 
-    function addItemRow(data = {name: "", qty: 1, rate: 0}) {
+    // data now includes itemDisc field
+    function addItemRow(data = {name: "", qty: 1, itemDisc: 0, rate: 0}) {
         const container = document.getElementById('itemsContainer');
         const row = document.createElement('div');
         row.className = 'item-row';
         row.innerHTML = `
-            <div class="input-group"><label>Service</label><input type="text" list="itemsData" class="row-name" value="${data.name}" placeholder="Type service..." oninput="handleAuto(this)"></div>
-            <div class="input-group"><label>Qty</label><input type="number" class="row-qty" value="${data.qty}" oninput="updateCalculations()"></div>
-            <div class="input-group"><label>Rate</label><input type="number" class="row-rate" value="${data.rate}" placeholder="0" oninput="updateCalculations()"></div>
+            <div class="input-group">
+                <input type="text" list="itemsData" class="row-name" value="${data.name}" placeholder="Type service..." oninput="handleAuto(this)">
+            </div>
+            <div class="input-group">
+                <input type="number" class="row-qty" value="${data.qty}" min="1" oninput="updateCalculations()">
+            </div>
+            <div class="input-group">
+                <input type="number" class="row-item-disc" value="${data.itemDisc || 0}" min="0" placeholder="0" oninput="updateCalculations()" title="Discount on this item (₹)">
+            </div>
+            <div class="input-group">
+                <input type="number" class="row-rate" value="${data.rate}" placeholder="0" oninput="updateCalculations()">
+            </div>
             <button class="btn-remove" onclick="this.parentElement.remove(); updateCalculations();">×</button>
         `;
         container.appendChild(row);
@@ -381,34 +436,40 @@
     }
 
     function updateCalculations() {
-        let subtotal = 0, totalTax = 0;
+        let subtotal = 0, totalItemDisc = 0, totalTax = 0;
         const applyGst = document.getElementById('gstEnabled').checked;
 
         document.querySelectorAll('.item-row').forEach(row => {
             const n = row.querySelector('.row-name').value;
             const q = parseFloat(row.querySelector('.row-qty').value) || 0;
             const r = parseFloat(row.querySelector('.row-rate').value) || 0;
+            const iDisc = parseFloat(row.querySelector('.row-item-disc').value) || 0;
+
             const lineAmt = q * r;
             subtotal += lineAmt;
+            totalItemDisc += iDisc;
+
+            const taxableAmt = Math.max(lineAmt - iDisc, 0);
             if(applyGst) {
                 const item = inventory.find(i => i.name === n);
-                totalTax += (lineAmt * (item ? item.gst : 18)) / 100;
+                totalTax += (taxableAmt * (item ? item.gst : 18)) / 100;
             }
         });
 
-        const disc = parseFloat(document.getElementById('discount').value) || 0;
-        const rawNet = subtotal + totalTax - disc;
+        const agencyDisc = parseFloat(document.getElementById('discount').value) || 0;
+        const rawNet = subtotal - totalItemDisc + totalTax - agencyDisc;
         const finalNet = Math.round(rawNet);
         const roundOff = (finalNet - rawNet).toFixed(2);
 
         document.getElementById('txtSubtotal').innerText = `₹${subtotal.toLocaleString()}`;
+        document.getElementById('txtItemDiscount').innerText = `-₹${totalItemDisc.toLocaleString()}`;
         document.getElementById('txtTax').innerText = `₹${totalTax.toLocaleString()}`;
-        document.getElementById('txtDiscount').innerText = `-₹${disc.toLocaleString()}`;
+        document.getElementById('txtDiscount').innerText = `-₹${agencyDisc.toLocaleString()}`;
         document.getElementById('txtRound').innerText = `₹${roundOff}`;
         document.getElementById('txtGrandTotal').innerText = `₹${finalNet.toLocaleString()}`;
 
         saveDraft();
-        return { subtotal, totalTax, disc, finalNet, roundOff };
+        return { subtotal, totalItemDisc, totalTax, agencyDisc, finalNet, roundOff };
     }
 
     function generateQuickQR(type) {
@@ -418,20 +479,7 @@
         const upi = `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${amt.toFixed(2)}&cu=INR`;
         const cont = document.getElementById('quickQRContainer');
         cont.innerHTML = `<div style="font-weight:800; margin-bottom:15px; font-size:14px;">SCAN TO PAY ₹${amt.toLocaleString()}</div><div id="qQR" style="display:inline-block; padding:20px; background:white; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.05);"></div>`;
-        
-        const qrc = new QRCode(document.getElementById('qQR'), { text: upi, width: 160, height: 160 });
-        
-        // Convert to static image after generation for preview reliability
-        setTimeout(() => {
-            const canv = document.querySelector('#qQR canvas');
-            if(canv) {
-                const img = document.createElement('img');
-                img.src = canv.toDataURL('image/png');
-                img.style.width = '160px';
-                canv.style.display = 'none';
-                document.getElementById('qQR').appendChild(img);
-            }
-        }, 300);
+        new QRCode(document.getElementById('qQR'), { text: upi, width: 160, height: 160 });
     }
 
     async function fetchClient() {
@@ -464,9 +512,22 @@
         let itemsHtml = "";
         document.querySelectorAll('.item-row').forEach(row => {
             const n = row.querySelector('.row-name').value;
-            const q = row.querySelector('.row-qty').value;
-            const r = row.querySelector('.row-rate').value;
-            if(n) itemsHtml += `<tr><td>${n}</td><td style="text-align:center;">${q}</td><td style="text-align:center;">₹${parseFloat(r).toLocaleString()}</td><td style="text-align:right; font-weight:700;">₹${(q*r).toLocaleString()}</td></tr>`;
+            const q = parseFloat(row.querySelector('.row-qty').value) || 0;
+            const r = parseFloat(row.querySelector('.row-rate').value) || 0;
+            const iDisc = parseFloat(row.querySelector('.row-item-disc').value) || 0;
+            const lineTotal = Math.max((q * r) - iDisc, 0);
+            if(n) {
+                const discCell = iDisc > 0
+                    ? `<span style="font-size:11px; color:#ef4444; font-weight:700; display:block;">-₹${iDisc.toLocaleString()} disc</span>`
+                    : '';
+                itemsHtml += `
+                    <tr>
+                        <td>${n}</td>
+                        <td style="text-align:center;">${q}</td>
+                        <td style="text-align:center;">₹${r.toLocaleString()}${discCell}</td>
+                        <td style="text-align:right; font-weight:700;">₹${lineTotal.toLocaleString()}</td>
+                    </tr>`;
+            }
         });
 
         const area = document.getElementById('invoiceArea');
@@ -501,7 +562,12 @@
 
                 <table class="inv-table">
                     <thead>
-                        <tr><th style="padding-left:0;">Service Description</th><th style="text-align:center;">Qty</th><th style="text-align:center;">Rate</th><th style="text-align:right;">Line Total</th></tr>
+                        <tr>
+                            <th style="padding-left:0;">Service Description</th>
+                            <th style="text-align:center;">Qty</th>
+                            <th style="text-align:center;">Rate</th>
+                            <th style="text-align:right;">Line Total</th>
+                        </tr>
                     </thead>
                     <tbody>${itemsHtml}</tbody>
                 </table>
@@ -521,11 +587,15 @@
                             <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:14px; color:#64748b;">
                                 <span>Subtotal</span><span style="font-weight:700; color:#1e293b;">₹${calc.subtotal.toLocaleString()}</span>
                             </div>
+                            ${calc.totalItemDisc > 0 ? `
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:14px; color:#f97316;">
+                                <span>Item Discounts</span><span style="font-weight:700;">-₹${calc.totalItemDisc.toLocaleString()}</span>
+                            </div>` : ''}
                             <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:14px; color:#64748b;">
                                 <span>Tax (GST 18%)</span><span style="font-weight:700; color:#1e293b;">₹${calc.totalTax.toLocaleString()}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:14px; color:#ef4444;">
-                                <span>Discount</span><span style="font-weight:700;">-₹${calc.disc.toLocaleString()}</span>
+                                <span>Agency Discount</span><span style="font-weight:700;">-₹${calc.agencyDisc.toLocaleString()}</span>
                             </div>
                             <div style="border-top:2px solid #e2e8f0; padding-top:15px; display:flex; justify-content:space-between; align-items:center;">
                                 <span style="font-weight:900; font-size:12px; color:#64748b; text-transform:uppercase;">Grand Net</span>
@@ -547,27 +617,7 @@
                 </div>
             </div>`;
 
-        if(balance > 0) {
-            new QRCode(document.getElementById('finalQR'), { 
-                text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, 
-                width: 120, 
-                height: 120 
-            });
-            
-            // Convert to IMAGE tag so html2canvas can see it easily
-            setTimeout(() => {
-                const qrCanvas = document.querySelector('#finalQR canvas');
-                if(qrCanvas) {
-                    const dataUrl = qrCanvas.toDataURL("image/png");
-                    const img = document.createElement("img");
-                    img.src = dataUrl;
-                    img.style.width = "120px";
-                    qrCanvas.style.display = "none";
-                    document.getElementById('finalQR').appendChild(img);
-                }
-            }, 500);
-        }
-        
+        if(balance > 0) new QRCode(document.getElementById('finalQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, width: 120, height: 120 });
         document.getElementById('afterButtons').style.display = 'grid';
         area.scrollIntoView({ behavior: 'smooth' });
     }
@@ -576,7 +626,7 @@
         const name = document.getElementById('customer').value || "Client";
         let mobile = document.getElementById('mobile').value.replace(/\D/g,"");
         const total = document.getElementById('txtGrandTotal').innerText;
-        const disc = document.getElementById('txtDiscount').innerText;
+        const agencyDisc = document.getElementById('txtDiscount').innerText;
         const paid = document.getElementById('paidAmount').value;
         const mode = document.getElementById('paymentMode').value;
         const balance = (parseFloat(total.replace(/₹|,/g,'')) - parseFloat(paid)).toFixed(2);
@@ -587,8 +637,14 @@
         document.querySelectorAll('.item-row').forEach((row) => {
             const n = row.querySelector('.row-name').value;
             const q = row.querySelector('.row-qty').value;
-            const r = row.querySelector('.row-rate').value;
-            if(n) itemsList += `🔹 *${n}* (x${q}) - ₹${parseFloat(r).toLocaleString()}\n`;
+            const r = parseFloat(row.querySelector('.row-rate').value) || 0;
+            const iDisc = parseFloat(row.querySelector('.row-item-disc').value) || 0;
+            const lineTotal = Math.max((parseFloat(q) * r) - iDisc, 0);
+            if(n) {
+                itemsList += `🔹 *${n}* (x${q}) - ₹${r.toLocaleString()}`;
+                if(iDisc > 0) itemsList += ` [Disc: -₹${iDisc.toLocaleString()}] → ₹${lineTotal.toLocaleString()}`;
+                itemsList += `\n`;
+            }
         });
 
         let msg = `💎 *ALGUM CREATIONS - PREMIUM INVOICE*\n`;
@@ -601,7 +657,7 @@
         msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
         msg += `💰 *PAYMENT SUMMARY:*\n`;
         msg += `🔸 Total Amount: ${total}\n`;
-        msg += `🔴 Applied Disc: ${disc}\n`;
+        msg += `🔴 Agency Disc: ${agencyDisc}\n`;
         msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
         msg += `✅ *Amt Paid:* ₹${paid}\n`;
         msg += `💳 *Channel:* ${mode}\n`;
@@ -620,43 +676,32 @@
     function downloadInvoice() {
         const node = document.getElementById("captureNode");
         showToast("Rendering High-Res Image...");
-        
-        // Final sanity check: ensure image is there
-        const qrImg = document.querySelector('#finalQR img');
-        
-        html2canvas(node, { 
-            scale: 3, 
-            backgroundColor: '#ffffff', 
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
-            onclone: (clonedDoc) => {
-                // Ensure the QR container is visible in the clone
-                const clonedQR = clonedDoc.getElementById('finalQR');
-                if(clonedQR) clonedQR.style.opacity = "1";
-            }
-        }).then(canvas => {
-            try {
-                const a = document.createElement("a");
-                a.download = `Algum_Invoice_${Date.now()}.png`; 
-                a.href = canvas.toDataURL("image/png", 1.0); 
-                a.click();
-                showToast("Invoice saved successfully!");
-            } catch (err) {
-                console.error("Save Error:", err);
-                showToast("Error saving image. Try again.");
-            }
+        html2canvas(node, { scale: 3, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
+            const a = document.createElement("a");
+            a.download = `Algum_Premium_Invoice_${Date.now()}.png`; 
+            a.href = canvas.toDataURL("image/png"); 
+            a.click();
+            showToast("Invoice saved successfully!");
         });
     }
 
     function saveDraft() {
         const items = [];
-        document.querySelectorAll('.item-row').forEach(row => items.push({name: row.querySelector('.row-name').value, qty: row.querySelector('.row-qty').value, rate: row.querySelector('.row-rate').value}));
-        localStorage.setItem('algum_bill_draft_v3', JSON.stringify({name: document.getElementById('customer').value, mob: document.getElementById('mobile').value, items}));
+        document.querySelectorAll('.item-row').forEach(row => items.push({
+            name: row.querySelector('.row-name').value,
+            qty: row.querySelector('.row-qty').value,
+            itemDisc: row.querySelector('.row-item-disc').value,
+            rate: row.querySelector('.row-rate').value
+        }));
+        localStorage.setItem('algum_bill_draft_v4', JSON.stringify({
+            name: document.getElementById('customer').value,
+            mob: document.getElementById('mobile').value,
+            items
+        }));
     }
 
     function loadDraft() {
-        const saved = localStorage.getItem('algum_bill_draft_v3');
+        const saved = localStorage.getItem('algum_bill_draft_v4');
         if(!saved) return false;
         const d = JSON.parse(saved);
         document.getElementById('customer').value = d.name || "";
@@ -669,5 +714,4 @@
 </script>
 </body>
 </html>
-
 
