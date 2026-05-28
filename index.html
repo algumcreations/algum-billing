@@ -282,12 +282,15 @@
 
     <button class="btn-action btn-main" onclick="generateInvoice()" style="height: 64px; font-size: 18px; margin-top: 40px;">Review & Generate Invoice</button>
 
-    <div id="afterButtons" style="display: none; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 35px;">
+    <!-- Updated with dedicated column structure that behaves excellently on all viewport sizes -->
+    <div id="afterButtons" style="display: none; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 35px;">
         <button class="btn-action" style="background: #25d366; color: white;" onclick="shareWhatsApp()">🚀 Send to WhatsApp</button>
-        <button class="btn-action" style="background: #0f172a; color: white;" onclick="downloadInvoice()">💾 Save to Gallery</button>
+        <button class="btn-action" style="background: #0f172a; color: white;" onclick="downloadInvoice()">💾 Save Invoice</button>
+        <button class="btn-action" style="background: #10b981; color: white;" onclick="downloadReceipt()">🧾 Save Receipt</button>
     </div>
 
     <div id="invoiceArea" class="invoice-outer"></div>
+    <div id="receiptArea" class="invoice-outer" style="margin-top: 40px;"></div>
     <datalist id="itemsData"></datalist>
 </div>
 
@@ -333,6 +336,7 @@
         setTimeout(() => t.style.display = 'none', 3000);
     }
 
+    // Toggle theme with safety guard
     function toggleTheme() {
         const b = document.body;
         const next = b.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -458,6 +462,7 @@
         const balance = calc.finalNet - paid;
         const status = balance <= 0 ? "PAID" : "DUE";
         const invNo = "AC-" + Date.now().toString().slice(-6);
+        const recNo = "REC-" + Date.now().toString().slice(-6);
         const customer = document.getElementById('customer').value || "Valued Client";
         const mobile = document.getElementById('mobile').value;
 
@@ -469,6 +474,7 @@
             if(n) itemsHtml += `<tr><td>${n}</td><td style="text-align:center;">${q}</td><td style="text-align:center;">₹${parseFloat(r).toLocaleString()}</td><td style="text-align:right; font-weight:700;">₹${(q*r).toLocaleString()}</td></tr>`;
         });
 
+        // Generate Invoice Render Node
         const area = document.getElementById('invoiceArea');
         area.style.display = 'block';
         area.innerHTML = `
@@ -547,6 +553,80 @@
                 </div>
             </div>`;
 
+        // Generate Receipt Render Node
+        const receiptArea = document.getElementById('receiptArea');
+        receiptArea.style.display = 'block';
+        receiptArea.innerHTML = `
+            <div id="captureReceiptNode" class="invoice-card" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                <div class="inv-sidebar" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);"></div>
+                
+                <div class="inv-header">
+                    <div class="inv-brand-box" style="background: #020617;">
+                        <h2 style="margin:0; font-size:28px; font-weight:900; letter-spacing:-1px;">ALGUM</h2>
+                        <p style="margin:0; font-size:11px; font-weight:700; letter-spacing:3px; opacity:0.8; text-transform:uppercase;">CREATIONS</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <p style="margin:0; font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase;">Payment Receipt</p>
+                        <p style="margin:4px 0; font-size:24px; font-weight:900; color:#0f172a;">#${recNo}</p>
+                        <div class="inv-badge" style="background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;">✓ RECEIVED</div>
+                    </div>
+                </div>
+
+                <div style="padding: 0 60px; display:flex; justify-content:space-between;">
+                    <div>
+                        <p style="margin:0 0 8px; color:#64748b; font-weight:800; text-transform:uppercase; font-size:10px; letter-spacing:1px;">Received From</p>
+                        <p style="margin:0; font-weight:800; font-size:20px; color:#0f172a;">${customer}</p>
+                        <p style="margin:4px 0; color:#10b981; font-weight:700; font-size:15px;">+91 ${mobile}</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <p style="margin:0 0 8px; color:#64748b; font-weight:800; text-transform:uppercase; font-size:10px; letter-spacing:1px;">Payment Date</p>
+                        <p style="margin:0; font-weight:800; font-size:18px;">${new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'long', year:'numeric'})}</p>
+                    </div>
+                </div>
+
+                <table class="inv-table">
+                    <thead>
+                        <tr><th style="padding-left:0;">Service Description</th><th style="text-align:center;">Qty</th><th style="text-align:center;">Rate</th><th style="text-align:right;">Line Total</th></tr>
+                    </thead>
+                    <tbody>${itemsHtml}</tbody>
+                </table>
+                
+                <div style="padding: 0 60px; display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 20px;">
+                    <div style="width:40%;">
+                        <div style="background:#f0fdf4; color:#166534; padding:25px; border-radius:24px; border:1px solid #bbf7d0; text-align:center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                            <div style="font-size:32px; margin-bottom:5px;">💳</div>
+                            <div style="font-weight:900; font-size:12px; color:#15803d; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Payment Channel</div>
+                            <div style="font-weight:800; font-size:18px; color:#14532d;">${document.getElementById('paymentMode').value}</div>
+                        </div>
+                    </div>
+                    <div style="width:45%;">
+                        <div style="background:#0f172a; padding:25px; border-radius:24px; color:white; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:14px; opacity:0.7;">
+                                <span>Total Bill</span><span>₹${calc.finalNet.toLocaleString()}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:14px; opacity:0.7;">
+                                <span>Remaining Balance</span><span>₹${balance.toLocaleString()}</span>
+                            </div>
+                            <div style="border-top:1px dashed rgba(255,255,255,0.2); padding-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight:900; font-size:11px; text-transform:uppercase; color:#10b981; letter-spacing:1px;">Paid Amount</span>
+                                <span style="font-weight:900; font-size:28px; color:#10b981; letter-spacing:-1px;">₹${paid.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inv-footer-area">
+                    <div style="text-align:left;">
+                        <p style="margin:0; font-weight:800; font-size:12px; color:#0f172a;">Algum Creations Global</p>
+                        <p style="margin:2px 0; font-size:11px; color:#64748b; font-weight:600;">India Office | Support: +91 7352185767</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <p style="margin:0; font-size:13px; font-weight:900; color:#10b981;">PAYMENT RECORDED</p>
+                        <p style="margin:2px 0; font-size:10px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Official digital payment receipt</p>
+                    </div>
+                </div>
+            </div>`;
+
         if(balance > 0) {
             new QRCode(document.getElementById('finalQR'), { 
                 text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, 
@@ -617,6 +697,7 @@
         window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(msg)}`);
     }
 
+    // Unchanged download logic for main invoice
     function downloadInvoice() {
         const node = document.getElementById("captureNode");
         showToast("Rendering High-Res Image...");
@@ -649,6 +730,32 @@
         });
     }
 
+    // High fidelity download implementation for payment receipt
+    function downloadReceipt() {
+        const node = document.getElementById("captureReceiptNode");
+        if(!node) return showToast("Please generate invoice first!");
+        showToast("Rendering Payment Receipt...");
+        
+        html2canvas(node, { 
+            scale: 3, 
+            backgroundColor: '#ffffff', 
+            useCORS: true,
+            allowTaint: true,
+            logging: false
+        }).then(canvas => {
+            try {
+                const a = document.createElement("a");
+                a.download = `Algum_Receipt_${Date.now()}.png`; 
+                a.href = canvas.toDataURL("image/png", 1.0); 
+                a.click();
+                showToast("Payment Receipt saved successfully!");
+            } catch (err) {
+                console.error("Save Error:", err);
+                showToast("Error saving receipt. Try again.");
+            }
+        });
+    }
+
     function saveDraft() {
         const items = [];
         document.querySelectorAll('.item-row').forEach(row => items.push({name: row.querySelector('.row-name').value, qty: row.querySelector('.row-qty').value, rate: row.querySelector('.row-rate').value}));
@@ -669,4 +776,5 @@
 </script>
 </body>
 </html>
+
 
