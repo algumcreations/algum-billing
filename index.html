@@ -471,8 +471,14 @@
         const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
         const balance = Math.max(0, calc.finalNet - paid);
         const status = balance <= 0 ? "PAID" : "DUE";
-        const invNo = "AC-" + Date.now().toString().slice(-6);
-        const recNo = "REC-" + Date.now().toString().slice(-6);
+        
+        // UPDATED INVOICE NUMBER LOGIC
+        const now = new Date();
+        const dateStr = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
+        const randNum = Math.floor(Math.random() * 90 + 10); // Random 2-digit number (10 to 99)
+        const invNo = "AC-" + dateStr + "-" + randNum;
+        const recNo = "REC-" + dateStr + "-" + randNum;
+
         const customer = document.getElementById('customer').value || "Valued Client";
         const mobile = document.getElementById('mobile').value;
 
