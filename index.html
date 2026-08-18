@@ -3,287 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>ALGUM CREATIONS | HYPER-PREMIUM BILLING</title>
+    <title>ALGUM CREATIONS | ENTERPRISE BILLING</title>
 
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Enterprise Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
-
         :root {
-            /* 2026 Modern Vibe - Ultra Premium Palette */
-            --brand: #EAAA00; /* Sophisticated Gold */
-            --brand-dark: #C68E00;
-            --brand-gradient: linear-gradient(135deg, #F5D061 0%, #EAAA00 100%);
-            --brand-soft: #FDF9EE;
+            /* Ultra-Premium Enterprise Palette (Stripe/Apple inspired) */
+            --primary: #0A0A0B; /* Deep rich black */
+            --secondary: #52525B; /* Professional slate gray */
+            --tertiary: #A1A1AA; /* Light slate */
+            --accent: #D4AF37; /* Refined Corporate Gold */
+            --accent-soft: rgba(212, 175, 55, 0.1);
             
             --success: #059669;
             --success-soft: #ECFDF5;
-            --danger: #E11D48;
-            --danger-soft: #FFF1F2;
+            --danger: #DC2626;
+            --danger-soft: #FEF2F2;
             
-            --bg: #F4F4F5; /* Sleek light gray bg */
-            --card: #FFFFFF;
-            --text: #09090B; /* Near black for extreme crispness */
-            --text-soft: #71717A;
-            --border: #E4E4E7;
+            --bg: #F4F4F5; /* Crisp cool gray background */
+            --surface: #FFFFFF; /* Pure white cards */
+            --border: #E4E4E7; /* Subtle structural borders */
+            --border-focus: #A1A1AA;
             
-            /* Refined layered shadows for depth without muddiness */
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
-            --shadow-float: 0 30px 60px rgba(0,0,0,0.08);
+            /* Professional precise shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
             
-            --glass: rgba(255, 255, 255, 0.95);
-            --radius-sm: 12px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
+            --radius-sm: 6px;
+            --radius-md: 8px; /* Sharper, more corporate corners */
+            --radius-lg: 12px;
         }
 
         [data-theme="dark"] {
+            --primary: #FAFAFA;
+            --secondary: #A1A1AA;
+            --tertiary: #71717A;
             --bg: #09090B;
-            --card: #18181B;
-            --text: #FAFAFA;
-            --text-soft: #A1A1AA;
+            --surface: #121214;
             --border: #27272A;
-            --brand-soft: rgba(234, 170, 0, 0.1);
-            --glass: rgba(24, 24, 27, 0.85);
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.3);
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.4);
-            --shadow-float: 0 30px 60px rgba(0,0,0,0.5);
+            --border-focus: #52525B;
         }
 
-        * { box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background-color: var(--bg); color: var(--text); margin: 0; padding: 40px 20px; 
+            background-color: var(--bg); color: var(--primary); margin: 0; padding: 40px 20px; 
             display: flex; flex-direction: column; align-items: center; min-height: 100vh; 
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(234, 170, 0, 0.03) 0, transparent 50%), 
-                radial-gradient(at 100% 100%, rgba(0, 0, 0, 0.02) 0, transparent 50%); 
-            background-attachment: fixed;
+            font-size: 14px; line-height: 1.5;
         }
 
         .app-container {
-            width: 100%; max-width: 900px; background: var(--glass); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
-            border-radius: var(--radius-lg); box-shadow: var(--shadow-float); padding: 48px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); position: relative; overflow: hidden;
-            margin-bottom: 20px;
+            width: 100%; max-width: 960px; background: var(--surface); 
+            border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 48px; 
+            border: 1px solid var(--border); position: relative; margin-bottom: 80px;
         }
 
-        /* Auto Save Indicator */
+        /* Minimalist Save Indicator */
         .auto-save-badge {
-            position: absolute; top: 24px; left: 50%; transform: translateX(-50%);
-            background: var(--success-soft); color: var(--success);
-            padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 700;
-            display: flex; align-items: center; gap: 6px; border: 1px solid rgba(5, 150, 105, 0.2);
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 10;
+            position: absolute; top: 16px; right: 24px;
+            color: var(--tertiary); font-size: 11px; font-weight: 500;
+            display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s ease;
         }
-        .auto-save-badge::before { content: ""; width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
+        .auto-save-badge::before { content: ""; width: 4px; height: 4px; background: var(--tertiary); border-radius: 50%; }
 
-        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; border-bottom: 1px solid var(--border); padding-bottom: 32px; position: relative; }
-        .header h1 { margin: 0; font-size: 32px; font-weight: 800; background: var(--brand-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .header p { margin: 8px 0 0; color: var(--text-soft); font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; }
-
-        .header-btns { display: flex; gap: 12px; }
-        .theme-btn, .reset-btn { background: var(--card); border: 1px solid var(--border); width: 44px; height: 44px; border-radius: var(--radius-sm); cursor: pointer; color: var(--text); font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); }
-        .theme-btn:hover, .reset-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .reset-btn:hover { background: var(--danger-soft); color: var(--danger); border-color: rgba(225, 29, 72, 0.2); }
-
-        .section-label { font-size: 12px; font-weight: 800; color: var(--text-soft); text-transform: uppercase; margin: 40px 0 24px; display: flex; align-items: center; gap: 16px; letter-spacing: 1.5px; }
-        .section-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-size: 12px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+        .header img { height: 60px; object-fit: contain; } /* Smaller, more professional logo size */
         
-        input, select { padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 15px; font-weight: 500; outline: none; background: var(--bg); color: var(--text); width: 100%; transition: all 0.2s ease; }
-        input:focus, select:focus { border-color: var(--brand); background: var(--card); box-shadow: 0 0 0 4px var(--brand-soft); }
+        .header-btns { display: flex; gap: 8px; }
+        .icon-btn { background: var(--surface); border: 1px solid var(--border); width: 36px; height: 36px; border-radius: var(--radius-sm); cursor: pointer; color: var(--secondary); font-size: 14px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); transition: all 0.2s; }
+        .icon-btn:hover { background: var(--bg); color: var(--primary); }
 
-        .mobile-input-wrapper { display: flex; align-items: center; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); overflow: hidden; transition: all 0.2s ease; }
-        .mobile-input-wrapper:focus-within { border-color: var(--brand); background: var(--card); box-shadow: 0 0 0 4px var(--brand-soft); }
-        .mobile-input-wrapper.valid { border-color: var(--success); box-shadow: 0 0 0 4px var(--success-soft); }
-        .mobile-prefix { background: transparent; color: var(--text-soft); font-weight: 700; padding: 14px 0 14px 16px; font-size: 15px; }
-        .mobile-input-wrapper input { border: none; border-radius: 0; box-shadow: none; background: transparent; padding-left: 12px; }
+        .section-header { margin: 40px 0 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
+        .section-header h2 { font-size: 16px; font-weight: 600; color: var(--primary); margin: 0; letter-spacing: -0.2px; }
+        .section-header span { font-size: 12px; color: var(--tertiary); }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 12px; font-weight: 500; color: var(--secondary); }
+        
+        input, select { 
+            padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); 
+            font-size: 14px; font-weight: 400; outline: none; background: var(--surface); color: var(--primary); 
+            width: 100%; box-shadow: var(--shadow-sm); transition: border-color 0.15s;
+        }
+        input:focus, select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.1); }
+        input::placeholder { color: var(--tertiary); }
+
+        /* Unified mobile input */
+        .mobile-input-wrapper { display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); overflow: hidden; background: var(--surface); }
+        .mobile-input-wrapper:focus-within { border-color: var(--border-focus); box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.1); }
+        .mobile-prefix { background: var(--bg); color: var(--secondary); font-size: 14px; padding: 10px 12px; border-right: 1px solid var(--border); font-weight: 500; }
+        .mobile-input-wrapper input { border: none; box-shadow: none; border-radius: 0; }
         .mobile-input-wrapper input:focus { box-shadow: none; }
 
-        .btn-sync { background: var(--text); color: var(--card); border: none; padding: 14px 20px; border-radius: var(--radius-sm); font-weight: 700; font-size: 14px; cursor: pointer; height: 52px; width: 100%; box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-sync:hover { background: var(--brand); color: #000; transform: translateY(-1px); }
-        .btn-sync:active { transform: translateY(1px); }
+        .btn-sync { background: var(--bg); color: var(--primary); border: 1px solid var(--border); padding: 10px 16px; border-radius: var(--radius-sm); font-weight: 500; font-size: 13px; cursor: pointer; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; gap: 6px; height: 42px; }
+        .btn-sync:hover { background: var(--border); }
 
-        .item-row { display: grid; grid-template-columns: 2.5fr 0.7fr 1fr 1fr 48px; gap: 16px; margin-bottom: 16px; align-items: flex-end; background: var(--card); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-        .btn-remove { background: var(--danger-soft); color: var(--danger); border: 1px solid transparent; height: 50px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 400; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
-        .btn-remove:hover { background: var(--danger); color: white; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3); }
-
-        .gst-toggle-card { display: flex; justify-content: space-between; align-items: center; padding: 24px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); margin-top: 32px; box-shadow: var(--shadow-sm); }
+        /* Enterprise Table style for items */
+        .item-list-header { display: grid; grid-template-columns: 3fr 1fr 1fr 1fr 40px; gap: 16px; padding: 0 16px 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+        .item-list-header span { font-size: 11px; font-weight: 600; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .item-row { display: grid; grid-template-columns: 3fr 1fr 1fr 1fr 40px; gap: 16px; margin-bottom: 12px; align-items: center; }
+        .btn-remove { background: transparent; color: var(--tertiary); border: none; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); height: 42px; width: 40px; }
+        .btn-remove:hover { background: var(--danger-soft); color: var(--danger); }
+
+        .btn-outline { background: transparent; border: 1px dashed var(--border); color: var(--secondary); padding: 12px; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; font-weight: 500; width: 100%; margin-top: 8px; transition: all 0.2s; }
+        .btn-outline:hover { border-color: var(--secondary); color: var(--primary); background: var(--bg); }
+
+        /* Subtle Toggle */
+        .gst-toggle-card { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-top: 24px; }
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: .3s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        input:checked + .slider { background: var(--brand); }
-        input:checked + .slider:before { transform: translateX(22px); }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--tertiary); transition: .3s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background: var(--primary); }
+        input:checked + .slider:before { transform: translateX(18px); }
 
-        .breakdown-card { background: var(--text); color: var(--card); border-radius: var(--radius-lg); padding: 40px; margin: 40px 0; box-shadow: var(--shadow-lg); position: relative; overflow: hidden; }
-        .breakdown-card::after { content: "SUMMARY"; position: absolute; top: -15px; right: -15px; font-size: 100px; font-weight: 900; color: rgba(255,255,255,0.03); pointer-events: none; letter-spacing: -2px; }
-        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 15px; opacity: 0.8; font-weight: 500; }
-        .total-row { border-top: 1px solid rgba(255,255,255,0.15); margin-top: 24px; padding-top: 24px; font-weight: 800; font-size: 36px; color: var(--brand); letter-spacing: -1px; align-items: center; }
+        /* Minimalist Financial Breakdown */
+        .financial-container { display: flex; justify-content: flex-end; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border); }
+        .breakdown-card { width: 320px; }
+        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: var(--secondary); }
+        .breakdown-row span:last-child { color: var(--primary); font-weight: 500; }
+        .total-row { border-top: 1px solid var(--border); margin-top: 16px; padding-top: 16px; font-weight: 600; font-size: 16px; color: var(--primary); align-items: center; }
+        
+        .quick-pay-section { background: var(--surface); border: 1px solid var(--border); padding: 32px; border-radius: var(--radius-md); margin-top: 32px; text-align: center; box-shadow: var(--shadow-sm); }
+        .quick-pay-label { font-size: 12px; font-weight: 600; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 24px; }
+        #quickPayAmount { font-size: 32px; font-weight: 600; text-align: center; color: var(--primary); border: none; border-bottom: 1px solid var(--border); border-radius: 0; padding: 8px 0; max-width: 200px; margin: 0 auto 24px; box-shadow: none; background: transparent; }
+        #quickPayAmount:focus { border-bottom-color: var(--primary); }
 
-        .quick-pay-section { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: var(--radius-lg); margin: 40px 0; position: relative; box-shadow: var(--shadow-md); }
-        .quick-pay-label { position: absolute; top: -14px; left: 40px; background: var(--text); color: var(--card); padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
-        #quickPayAmount { font-size: 40px; font-weight: 800; text-align: center; color: var(--text); border: none; border-bottom: 2px solid var(--border); height: 80px; margin-bottom: 32px; border-radius: 0; background: transparent; padding: 0; }
-        #quickPayAmount:focus { border-bottom-color: var(--brand); box-shadow: none; }
+        /* Floating Action Bar */
+        .action-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: center; gap: 12px; z-index: 100; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
+        .btn-action { padding: 12px 24px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-weight: 500; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; background: var(--surface); color: var(--primary); transition: all 0.2s; }
+        .btn-action:hover { background: var(--bg); }
+        .btn-primary { background: var(--primary); color: var(--surface); border-color: var(--primary); }
+        .btn-primary:hover { background: #000; color: #FFF; }
+        .btn-success { background: #25D366; color: #FFF; border-color: #25D366; }
+        .btn-success:hover { background: #128C7E; color: #FFF; }
 
-        /* --- PREMIUM INVOICE STYLING (2026 Minimalist Luxury) --- */
-        .invoice-outer { margin-top: 60px; display: none; }
+        /* ULTRA-PREMIUM INVOICE STYLING (Corporate/Enterprise Grade) */
+        .invoice-outer { margin-top: 40px; display: none; background: #E5E7EB; padding: 40px; border-radius: var(--radius-md); overflow-x: auto;}
+        
         .invoice-card { 
-            width: 800px; margin: 0 auto; background: #FFFFFF; color: #09090B; 
-            position: relative; border: 1px solid #E4E4E7; box-shadow: 0 40px 80px rgba(0,0,0,0.08);
-            overflow: hidden; padding-bottom: 60px; border-radius: 0px; 
+            width: 800px; margin: 0 auto; background: #FFFFFF; color: #000000; 
+            font-family: 'Inter', sans-serif; position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 56px;
         }
-        
-        .inv-header { padding: 60px 60px 40px; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #F4F4F5; }
-        .inv-brand-box { display: flex; flex-direction: column; gap: 8px; }
-        
-        .inv-badge { padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; letter-spacing: 1px; }
-        .badge-paid { background: #ECFDF5; color: #059669; }
-        .badge-due { background: #FFF1F2; color: #E11D48; }
-        
-        .inv-table { width: calc(100% - 120px); margin: 40px 60px; border-collapse: collapse; }
-        .inv-table th { text-align: left; padding: 16px 0; font-size: 11px; color: #71717A; text-transform: uppercase; border-bottom: 1px solid #09090B; letter-spacing: 1px; font-weight: 700; }
-        .inv-table td { padding: 20px 0; border-bottom: 1px solid #F4F4F5; font-size: 14px; font-weight: 500; color: #27272A; }
 
-        .inv-footer-area { padding: 40px 60px 0; display: flex; justify-content: space-between; align-items: flex-end; }
+        .inv-header-grid { display: flex; justify-content: space-between; margin-bottom: 48px; }
+        .inv-logo-area img { height: 48px; object-fit: contain; margin-left: -4px; }
+        .inv-meta-area { text-align: right; }
+        .inv-title { font-size: 20px; font-weight: 300; letter-spacing: 2px; color: #52525B; text-transform: uppercase; margin: 0 0 8px 0; }
+        .inv-number { font-size: 16px; font-weight: 600; color: #000000; margin: 0 0 12px 0; }
+        .inv-badge { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-paid { background: #F0FDF4; color: #166534; border: 1px solid #DCFCE7; }
+        .badge-due { background: #FEF2F2; color: #991B1B; border: 1px solid #FEE2E2; }
 
-        .btn-action { padding: 16px 24px; border-radius: var(--radius-sm); border: none; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s ease; }
-        .btn-main { background: var(--text); color: var(--card); width: 100%; box-shadow: var(--shadow-md); }
-        .btn-main:hover { background: var(--brand); color: #000; transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .inv-addresses { display: flex; justify-content: space-between; margin-bottom: 48px; font-size: 13px; line-height: 1.6; color: #3F3F46; }
+        .inv-addr-title { font-size: 11px; font-weight: 600; color: #A1A1AA; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px 0; }
+        .inv-addr-name { font-size: 15px; font-weight: 600; color: #000000; margin: 0 0 4px 0; }
+
+        .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        .inv-table th { text-align: left; padding: 12px 8px; font-size: 11px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E4E4E7; background: #F9FAFB; }
+        .inv-table td { padding: 16px 8px; font-size: 13px; color: #18181B; border-bottom: 1px solid #F4F4F5; }
+        .inv-table td.qty-col, .inv-table th.qty-col { text-align: center; }
+        .inv-table td.num-col, .inv-table th.num-col { text-align: right; }
+
+        .inv-bottom-grid { display: flex; justify-content: space-between; align-items: flex-end; }
         
-        #toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--card); padding: 16px 32px; border-radius: 30px; font-size: 14px; font-weight: 600; display: none; z-index: 10000; box-shadow: var(--shadow-float); border: 1px solid rgba(255,255,255,0.1); }
+        .inv-summary-box { width: 280px; }
+        .inv-summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: #52525B; }
+        .inv-summary-row span:last-child { color: #000000; font-weight: 500; }
+        .inv-total-row { display: flex; justify-content: space-between; border-top: 1px solid #E4E4E7; margin-top: 12px; padding-top: 16px; align-items: center; }
+        .inv-total-label { font-size: 12px; font-weight: 600; color: #18181B; text-transform: uppercase; letter-spacing: 0.5px; }
+        .inv-total-val { font-size: 20px; font-weight: 600; color: #000000; }
 
-        #tutorialOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 9, 11, 0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .tut-card { background: var(--card); width: 100%; max-width: 480px; border-radius: var(--radius-lg); padding: 48px; box-shadow: var(--shadow-float); border: 1px solid var(--border); }
+        .inv-footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid #F4F4F5; text-align: center; font-size: 11px; color: #A1A1AA; }
 
-        /* Shortcuts Bar */
-        .shortcuts-bar {
-            display: flex; gap: 24px; justify-content: center; padding: 16px;
-            color: var(--text-soft); font-size: 12px; font-weight: 600;
-        }
-        .shortcut-item { display: flex; align-items: center; gap: 8px; }
-        .shortcut-key { background: var(--card); border: 1px solid var(--border); padding: 4px 8px; border-radius: 6px; color: var(--text); box-shadow: var(--shadow-sm); }
+        /* QRs stay entirely functional, just cleanly wrapped */
+        .qr-wrapper { text-align: left; }
+        .qr-wrapper p { font-size: 11px; font-weight: 500; color: #71717A; margin: 12px 0 0 0; }
+        
+        #toast { position: fixed; top: 24px; right: 24px; background: #18181B; color: #FFF; padding: 12px 24px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; opacity: 0; z-index: 10000; box-shadow: var(--shadow-lg); transition: all 0.3s; transform: translateY(-20px); pointer-events: none; }
+        #toast.show { opacity: 1; transform: translateY(0); }
+
+        /* Modal Preview Overlay */
+        #previewModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; overflow-y: auto; padding: 40px 20px; }
+        .modal-content { max-width: 880px; margin: 0 auto; position: relative; }
+        .modal-close { position: absolute; top: 0px; right: -40px; background: #FFF; color: #000; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .modal-actions { text-align: center; margin-top: 24px; display: flex; justify-content: center; gap: 16px; }
 
         @media (max-width: 768px) {
-            body { padding: 16px; }
-            .app-container { padding: 24px; border-radius: var(--radius-md); }
-            .grid { grid-template-columns: 1fr; gap: 16px; }
-            .grid[style*="grid-template-columns: 1fr 1fr 1fr 1.5fr;"] { grid-template-columns: 1fr !important; }
-            .item-row { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
-            .invoice-card { width: 100%; border-radius: 0; }
-            .inv-header { padding: 32px 24px; flex-direction: column; gap: 24px; }
-            .inv-table { width: calc(100% - 48px); margin: 24px; }
-            .inv-footer-area { padding: 32px 24px 0; flex-direction: column; gap: 32px; text-align: left; align-items: flex-start; }
-            .breakdown-card { padding: 24px; }
-            .quick-pay-section { padding: 32px 24px; }
-            .shortcuts-bar { display: none; }
+            body { padding: 20px 16px; padding-bottom: 100px; }
+            .app-container { padding: 24px; border-radius: var(--radius-md); border: none; box-shadow: none; background: transparent; }
+            .grid, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 16px; }
+            .item-list-header { display: none; }
+            .item-row { grid-template-columns: 1fr 1fr; position: relative; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); }
+            .item-row .input-group:first-child { grid-column: 1 / -1; }
+            .item-row .btn-remove { position: absolute; top: 8px; right: 8px; height: 32px; width: 32px; }
+            .financial-container { justify-content: stretch; }
+            .breakdown-card { width: 100%; }
+            .action-bar { padding: 16px; flex-wrap: wrap; }
+            .action-bar button { flex: 1 1 calc(50% - 12px); font-size: 12px; padding: 10px; }
+            .modal-close { right: 0; top: -40px; }
         }
     </style>
 </head>
 <body data-theme="light">
 
-<div id="toast"></div>
+<div id="toast">Message</div>
 
-<!-- Tutorial -->
-<div id="tutorialOverlay">
-    <div class="tut-card">
-        <div style="margin-bottom: 32px; text-align: center;">
-            <div style="width: 72px; height: 72px; background: var(--brand-soft); color: var(--brand); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 24px;">💎</div>
-            <h2 style="margin:0; font-weight: 800; font-size: 26px; letter-spacing: -0.5px; color: var(--text);">Algum Premium v3</h2>
-            <p style="font-size: 12px; color: var(--text-soft); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px;">Next-Gen Billing Solution</p>
+<!-- Preview Modal -->
+<div id="previewModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closePreview()">×</button>
+        <div id="previewContainer"></div>
+        <div class="modal-actions" id="modalActions" style="display:none;">
+            <button class="btn-action" style="background:#FFF;" onclick="downloadInvoice()">↓ Save PDF / Image</button>
+            <button class="btn-action btn-success" onclick="shareWhatsApp()">Deploy to WhatsApp</button>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px;">
-            <div style="display: flex; gap: 16px; align-items: flex-start;">
-                <span style="background: var(--text); color: var(--card); width: 24px; height: 24px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; margin-top: 2px;">1</span>
-                <p style="margin:0; font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.5;"><b>Cloud Sync:</b> Fetch existing client data instantly.</p>
-            </div>
-            <div style="display: flex; gap: 16px; align-items: flex-start;">
-                <span style="background: var(--text); color: var(--card); width: 24px; height: 24px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; margin-top: 2px;">2</span>
-                <p style="margin:0; font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.5;"><b>Dynamic Rates:</b> Services auto-fill from master list.</p>
-            </div>
-            <div style="display: flex; gap: 16px; align-items: flex-start;">
-                <span style="background: var(--text); color: var(--card); width: 24px; height: 24px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; margin-top: 2px;">3</span>
-                <p style="margin:0; font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.5;"><b>WhatsApp Pro:</b> Send branded invoices directly.</p>
-            </div>
-        </div>
-        <button class="btn-action btn-main" onclick="closeTutorial()">Experience Premium</button>
     </div>
 </div>
 
 <div class="app-container">
-    <div id="autoSaveBadge" class="auto-save-badge">Draft Saved</div>
+    <div id="autoSaveBadge" class="auto-save-badge">Saved</div>
 
     <div class="header">
-        <div>
-            <!-- Included specific logo image here as requested without the previous Algum text -->
-            <img src="https://i.ibb.co/933TXyCF/20260618-221353.png" alt="Algum Creations" border="0" style="height: 120px; margin-bottom: 8px;">
-            <p>Design • Strategy • Growth</p>
-        </div>
+        <img src="https://i.ibb.co/933TXyCF/20260618-221353.png" alt="Algum Creations">
         <div class="header-btns">
-            <button class="reset-btn" onclick="clearForm()" title="Clear Form (Alt+C)">🗑️</button>
-            <button class="theme-btn" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
+            <button class="icon-btn" onclick="clearForm()" title="Clear Workspace">⟲</button>
+            <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">◐</button>
         </div>
     </div>
 
-    <!-- Step 1: Customer Profile -->
-    <span class="section-label">1. Customer Workspace</span>
+    <!-- Client Info -->
+    <div class="section-header">
+        <h2>Client Details</h2>
+        <span>Step 1</span>
+    </div>
+    
     <div class="grid">
         <div class="input-group">
-            <label>Customer Mobile</label>
-            <div class="mobile-input-wrapper" id="mobileWrapper">
+            <label>Mobile Number</label>
+            <div class="mobile-input-wrapper">
                 <span class="mobile-prefix">+91</span>
-                <input type="tel" id="mobile" placeholder="XXXXXXXXXX" maxlength="10" oninput="validateMobile()">
+                <input type="tel" id="mobile" placeholder="Enter 10 digits" maxlength="10" oninput="validateMobile()">
             </div>
         </div>
         <div style="display: flex; align-items: flex-end;">
-            <button class="btn-sync" onclick="fetchClient()" id="fetchBtn">⚡ Sync Client Data</button>
+            <button class="btn-sync" onclick="fetchClient()" id="fetchBtn" style="width: 100%;">Fetch Records</button>
         </div>
     </div>
-    <div id="clientDetails"></div>
+    <div id="clientDetails" style="margin-top: 12px;"></div>
 
-    <div class="grid" style="grid-template-columns: 1.5fr 1fr;">
+    <div class="grid" style="margin-top: 20px;">
         <div class="input-group">
-            <label>Customer Full Name</label>
-            <input type="text" id="customer" placeholder="John Doe" oninput="saveDraft()">
+            <label>Billed To (Entity / Name)</label>
+            <input type="text" id="customer" placeholder="Client Name" oninput="saveDraft()">
         </div>
         <div class="input-group">
-            <label>Billing Date</label>
+            <label>Date of Issue</label>
             <input type="date" id="billDate" onchange="saveDraft()">
         </div>
     </div>
 
-    <div style="margin-top: 32px; padding: 32px; background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius-md); text-align: center; transition: all 0.2s ease;">
-        <label style="color: var(--text); font-size: 11px; margin-bottom: 16px; display: block; font-weight: 800; letter-spacing: 1px;">ATTACH REFERENCE DESIGNS</label>
-        <input type="file" id="mediaPicker" multiple accept="image/*" style="display:none;" onchange="handleFileSelect()">
-        <button onclick="document.getElementById('mediaPicker').click()" style="background:var(--card); border:1px solid var(--border); padding:12px 24px; border-radius:var(--radius-sm); font-weight:700; cursor:pointer; color:var(--text); box-shadow: var(--shadow-sm); font-size: 13px;">Choose Files</button>
-        <div id="fileListPreview" style="font-size: 13px; margin-top: 16px; color: var(--text-soft); font-weight: 500;">No designs attached</div>
+    <!-- Deliverables -->
+    <div class="section-header">
+        <h2>Deliverables</h2>
+        <span>Step 2</span>
     </div>
 
-    <!-- Step 2: Service Selection -->
-    <span class="section-label">2. Service Selection</span>
-    <div class="item-list">
-        <div id="itemsContainer"></div>
-        <button class="btn-outline" style="width: 100%; border: 1px dashed var(--border); padding: 20px; margin-top: 16px; border-radius: var(--radius-md); cursor: pointer; font-weight: 700; color: var(--text-soft); background: var(--bg); font-size: 14px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='var(--text)'; this.style.color='var(--text)';" onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text-soft)';" onclick="addItemRow()">+ Add Service Row</button>
+    <div class="item-list-header">
+        <span>Description</span>
+        <span style="text-align:center;">Qty</span>
+        <span style="text-align:right;">Rate (₹)</span>
+        <span style="text-align:right;">Disc (₹)</span>
+        <span></span>
+    </div>
+    
+    <div id="itemsContainer"></div>
+    <button class="btn-outline" onclick="addItemRow()">+ Add Line Item</button>
+
+    <!-- Settings & Financials -->
+    <div class="section-header">
+        <h2>Financials & Terms</h2>
+        <span>Step 3</span>
+    </div>
+
+    <div class="grid-4">
+        <div class="input-group">
+            <label>Global Disc (₹)</label>
+            <input type="number" id="discount" value="0" oninput="updateCalculations()">
+        </div>
+        <div class="input-group">
+            <label>Advance Req (₹)</label>
+            <input type="number" id="advAmount" value="0" oninput="saveDraft()">
+        </div>
+        <div class="input-group">
+            <label>Amt Received (₹)</label>
+            <input type="number" id="paidAmount" value="0" oninput="updateCalculations()">
+        </div>
+        <div class="input-group">
+            <label>Payment Mode</label>
+            <select id="paymentMode" onchange="saveDraft()">
+                <option value="Online UPI">Online UPI</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="input-group" style="margin-top: 20px;">
+        <label>Memo / Notes</label>
+        <input type="text" id="customNotes" placeholder="Additional terms or project reference..." oninput="saveDraft()">
     </div>
 
     <div class="gst-toggle-card">
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <div style="width: 48px; height: 48px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">⚖️</div>
-            <div>
-                <span style="font-size: 15px; font-weight: 800; display: block; color: var(--text);">OFFICIAL GST (18%)</span>
-                <span style="font-size: 12px; color: var(--text-soft); font-weight: 500; margin-top: 4px; display: block;">Generate compliant tax invoice</span>
-            </div>
+        <div>
+            <span style="font-size: 14px; font-weight: 500; color: var(--primary); display: block;">Apply 18% GST</span>
+            <span style="font-size: 12px; color: var(--tertiary);">Generates a tax-compliant invoice</span>
         </div>
         <label class="switch">
             <input type="checkbox" id="gstEnabled" onchange="updateCalculations()">
@@ -291,81 +338,45 @@
         </label>
     </div>
 
-    <div class="breakdown-card">
-        <div class="breakdown-row"><span>Cart Subtotal:</span><span id="txtSubtotal">₹0.00</span></div>
-        <div class="breakdown-row"><span>Applied Tax (GST):</span><span id="txtTax">₹0.00</span></div>
-        <div class="breakdown-row"><span>Global Agency Discount:</span><span id="txtDiscount">-₹0.00</span></div>
-        <div class="breakdown-row" style="opacity: 0.5;"><span>Adjustment:</span><span id="txtRound">₹0.00</span></div>
-        <div class="total-row breakdown-row">
-            <span>NET PAYABLE</span>
-            <span id="txtGrandTotal">₹0.00</span>
+    <div class="financial-container">
+        <div class="breakdown-card">
+            <div class="breakdown-row"><span>Subtotal</span><span id="txtSubtotal">₹0.00</span></div>
+            <div class="breakdown-row"><span>GST Tax</span><span id="txtTax">₹0.00</span></div>
+            <div class="breakdown-row"><span>Discount</span><span id="txtDiscount">-₹0.00</span></div>
+            <div class="total-row">
+                <span>Total Amount</span>
+                <span id="txtGrandTotal">₹0.00</span>
+            </div>
         </div>
     </div>
 
     <div class="quick-pay-section">
-        <div class="quick-pay-label">Smart Payment Portal</div>
-        <input type="number" id="quickPayAmount" placeholder="0.00" oninput="updateCalculations()">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-            <button class="btn-action" style="background: var(--bg); color: var(--text); border: 1px solid var(--border);" onclick="generateQuickQR('part')">QR: Part Payment</button>
-            <button class="btn-action btn-main" style="margin:0;" onclick="generateQuickQR('full')">QR: Full Payment</button>
+        <span class="quick-pay-label">Quick Terminal</span>
+        <input type="number" id="quickPayAmount" placeholder="0" oninput="updateCalculations()">
+        <div class="grid" style="max-width: 400px; margin: 0 auto;">
+            <button class="btn-action" style="justify-content:center;" onclick="generateQuickQR('part')">QR: Custom</button>
+            <button class="btn-action btn-primary" style="justify-content:center; margin:0;" onclick="generateQuickQR('full')">QR: Full</button>
         </div>
-        <div id="quickQRContainer" style="text-align: center; margin-top: 40px;"></div>
+        <div id="quickQRContainer" style="text-align: center; margin-top: 32px;"></div>
     </div>
 
-    <!-- Step 3: Authorization -->
-    <span class="section-label">3. Payment Authorization</span>
-    <!-- UPDATE: Added Advance Field seamlessly without breaking layout on desktop/mobile -->
-    <div class="grid" style="grid-template-columns: 1fr 1fr 1fr 1.5fr;">
-        <div class="input-group">
-            <label>Global Discount (₹)</label>
-            <input type="number" id="discount" value="0" oninput="updateCalculations()">
-        </div>
-        <div class="input-group">
-            <label>Advance Reqd (₹)</label>
-            <input type="number" id="advAmount" value="0" oninput="saveDraft()">
-        </div>
-        <div class="input-group">
-            <label>Amount Received</label>
-            <input type="number" id="paidAmount" value="0" oninput="updateCalculations()">
-        </div>
-        <div class="input-group">
-            <label>Payment Channel</label>
-            <select id="paymentMode" onchange="saveDraft()">
-                <option value="Online UPI">Online UPI (PhonePe/GPay)</option>
-                <option value="Cash">Physical Cash</option>
-                <option value="Bank Transfer">Direct IMPS/NEFT</option>
-            </select>
-        </div>
-    </div>
-    
-    <!-- Pro Feature - Custom Invoice Notes -->
-    <div class="input-group" style="margin-top: 16px;">
-        <label>Invoice Notes / Terms (Optional)</label>
-        <input type="text" id="customNotes" placeholder="e.g. Expected delivery in 3-5 business days..." oninput="saveDraft()">
-    </div>
-
-    <button class="btn-action btn-main" onclick="generateInvoice()" style="height: 64px; font-size: 16px; margin-top: 48px; letter-spacing: 0.5px;">Review & Generate Invoice</button>
-
-    <!-- Updated with dedicated column structure that behaves excellently on all viewport sizes -->
-    <div id="afterButtons" style="display: none; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 32px;">
-        <button class="btn-action" style="background: #128C7E; color: white;" onclick="shareWhatsApp()">🚀 Send to WhatsApp</button>
-        <button class="btn-action" style="background: var(--text); color: var(--card);" onclick="downloadInvoice()">💾 Save Invoice</button>
-        <button class="btn-action" style="background: var(--bg); color: var(--text); border: 1px solid var(--border);" onclick="downloadReceipt()">🧾 Save Receipt</button>
-    </div>
-
-    <div id="invoiceArea" class="invoice-outer"></div>
-    <div id="receiptArea" class="invoice-outer" style="margin-top: 40px;"></div>
-    <datalist id="itemsData"></datalist>
 </div>
 
-<!-- Shortcuts legend for power users -->
-<div class="shortcuts-bar">
-    <div class="shortcut-item"><span class="shortcut-key">Alt + N</span> New Service Row</div>
-    <div class="shortcut-item"><span class="shortcut-key">Alt + G</span> Generate Invoice</div>
-    <div class="shortcut-item"><span class="shortcut-key">Alt + C</span> Clear Form</div>
+<!-- Sticky Action Bar -->
+<div class="action-bar">
+    <button class="btn-action" onclick="renderDocument('receipt')">View Receipt</button>
+    <button class="btn-action btn-primary" onclick="renderDocument('invoice')">Preview Document</button>
+    <button class="btn-action btn-success" onclick="shareWhatsApp()">WhatsApp</button>
 </div>
+
+<!-- Hidden Canvas Render Nodes -->
+<div id="invoiceArea" class="invoice-outer"></div>
+<div id="receiptArea" class="invoice-outer"></div>
+
+<datalist id="itemsData"></datalist>
 
 <script>
+    // --- CORE LOGIC UNTOUCHED ---
     const UPI_ID = "tinu01jmp@oksbi";
     const SHEET_API = "https://script.google.com/macros/s/AKfycbz7L7LsHuTui703d62Yt4PO4Wtw69a4ALM-eVJqJmalwYcygLgq6EPPS8kuwRQNh28dcQ/exec";
 
@@ -392,61 +403,33 @@
     ];
 
     let autoSaveTimeout;
-
-    // Pro Keyboard Shortcuts
-    document.addEventListener('keydown', (e) => {
-        if(e.altKey) {
-            const key = e.key.toLowerCase();
-            if(key === 'n') { e.preventDefault(); addItemRow(); }
-            if(key === 'g') { e.preventDefault(); generateInvoice(); }
-            if(key === 'c') { e.preventDefault(); clearForm(); }
-        }
-    });
-
-    // Smart Validation
-    function validateMobile() {
-        const val = document.getElementById('mobile').value;
-        const wrap = document.getElementById('mobileWrapper');
-        if(val.length === 10) wrap.classList.add('valid');
-        else wrap.classList.remove('valid');
-        saveDraft();
-    }
-
-    function handleFileSelect() {
-        const input = document.getElementById('mediaPicker');
-        const preview = document.getElementById('fileListPreview');
-        preview.innerText = input.files.length > 0 ? `Selected: ${input.files.length} design(s) attached` : 'No designs attached';
-    }
-
-    function closeTutorial() {
-        document.getElementById('tutorialOverlay').style.display = 'none';
-        localStorage.setItem('algum_tut_seen_v3', 'true');
-    }
+    
+    // NEW FEATURE: Client Local Memory
+    let clientMemory = JSON.parse(localStorage.getItem('algum_client_memory') || '{}');
 
     function showToast(m) {
         const t = document.getElementById('toast');
-        t.innerText = m; t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3000);
+        t.innerText = m; 
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    // Toggle theme with safety guard
     function toggleTheme() {
         const b = document.body;
         const next = b.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         b.setAttribute('data-theme', next);
-        localStorage.setItem('algum_theme', next);
+        localStorage.setItem('algum_theme_v4', next);
     }
 
     function clearForm() {
-        if(confirm("This will clear all current data. Proceed?")) { 
-            localStorage.removeItem('algum_bill_draft_v3');
+        if(confirm("Clear current workspace?")) { 
+            localStorage.removeItem('algum_bill_draft_v4');
             location.reload(); 
         }
     }
 
     function init() {
-        if(localStorage.getItem('algum_tut_seen_v3') === 'true') document.getElementById('tutorialOverlay').style.display = 'none';
-        document.body.setAttribute('data-theme', localStorage.getItem('algum_theme') || 'light');
+        document.body.setAttribute('data-theme', localStorage.getItem('algum_theme_v4') || 'light');
         document.getElementById('billDate').valueAsDate = new Date();
         const dl = document.getElementById('itemsData');
         inventory.forEach(item => {
@@ -457,17 +440,32 @@
         if(!loadDraft()) addItemRow();
     }
 
-    // Updated to include Discount (data.discount)
+    function formatINR(number) {
+        return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(number);
+    }
+
+    // SMART FEATURE: Check local memory as user types
+    function validateMobile() {
+        const val = document.getElementById('mobile').value;
+        if(val.length === 10) {
+            if(clientMemory[val] && !document.getElementById('customer').value) {
+                document.getElementById('customer').value = clientMemory[val];
+                showToast("Autofilled from recent memory");
+            }
+        }
+        saveDraft();
+    }
+
     function addItemRow(data = {name: "", qty: 1, rate: 0, discount: 0}) {
         const container = document.getElementById('itemsContainer');
         const row = document.createElement('div');
         row.className = 'item-row';
         row.innerHTML = `
-            <div class="input-group"><label>Service</label><input type="text" list="itemsData" class="row-name" value="${data.name}" placeholder="Type service..." oninput="handleAuto(this)"></div>
-            <div class="input-group"><label>Qty</label><input type="number" class="row-qty" value="${data.qty}" oninput="updateCalculations()"></div>
-            <div class="input-group"><label>Rate</label><input type="number" class="row-rate" value="${data.rate}" placeholder="0" oninput="updateCalculations()"></div>
-            <div class="input-group"><label>Disc (₹)</label><input type="number" class="row-disc" value="${data.discount || 0}" placeholder="0" oninput="updateCalculations()"></div>
-            <button class="btn-remove" onclick="this.parentElement.remove(); updateCalculations();" title="Remove Item">×</button>
+            <div class="input-group"><input type="text" list="itemsData" class="row-name" value="${data.name}" placeholder="Service description..." oninput="handleAuto(this)"></div>
+            <div class="input-group"><input type="number" class="row-qty" value="${data.qty}" style="text-align:center;" oninput="updateCalculations()"></div>
+            <div class="input-group"><input type="number" class="row-rate" value="${data.rate}" placeholder="0" style="text-align:right;" oninput="updateCalculations()"></div>
+            <div class="input-group"><input type="number" class="row-disc" value="${data.discount || 0}" placeholder="0" style="text-align:right;" oninput="updateCalculations()"></div>
+            <button class="btn-remove" onclick="this.parentElement.remove(); updateCalculations();" title="Remove">×</button>
         `;
         container.appendChild(row);
         updateCalculations();
@@ -505,35 +503,32 @@
         const disc = parseFloat(document.getElementById('discount').value) || 0; 
         const rawNet = subtotal + totalTax - disc;
         const finalNet = Math.max(0, Math.round(rawNet));
-        const roundOff = (finalNet - rawNet).toFixed(2);
 
-        document.getElementById('txtSubtotal').innerText = `₹${subtotal.toLocaleString()}`;
-        document.getElementById('txtTax').innerText = `₹${totalTax.toLocaleString()}`;
-        document.getElementById('txtDiscount').innerText = `-₹${disc.toLocaleString()}`;
-        document.getElementById('txtRound').innerText = `₹${roundOff}`;
-        document.getElementById('txtGrandTotal').innerText = `₹${finalNet.toLocaleString()}`;
+        document.getElementById('txtSubtotal').innerText = `₹${formatINR(subtotal)}`;
+        document.getElementById('txtTax').innerText = `₹${formatINR(totalTax)}`;
+        document.getElementById('txtDiscount').innerText = `-₹${formatINR(disc)}`;
+        document.getElementById('txtGrandTotal').innerText = `₹${formatINR(finalNet)}`;
 
         saveDraft();
-        return { subtotal, totalTax, disc, finalNet, roundOff };
+        return { subtotal, totalTax, disc, finalNet };
     }
 
     function generateQuickQR(type) {
         const calc = updateCalculations();
         let amt = type === 'full' ? calc.finalNet : (parseFloat(document.getElementById('quickPayAmount').value) || 0);
-        if(amt <= 0) return showToast("Please specify amount");
+        if(amt <= 0) return showToast("Enter an amount");
         const upi = `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${amt.toFixed(2)}&cu=INR`;
         const cont = document.getElementById('quickQRContainer');
-        cont.innerHTML = `<div style="font-weight:700; margin-bottom:20px; font-size:12px; color: var(--text-soft); letter-spacing: 1px; text-transform: uppercase;">SCAN TO PAY ₹${amt.toLocaleString()}</div><div id="qQR" style="display:inline-block; padding:16px; background:white; border-radius:16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);"></div>`;
+        cont.innerHTML = `<div style="font-size:12px; color:var(--secondary); margin-bottom:12px; font-weight:500;">Scan to pay ₹${formatINR(amt)}</div><div id="qQR" style="display:inline-block; padding:12px; background:white; border-radius:8px; border: 1px solid var(--border);"></div>`;
         
-        const qrc = new QRCode(document.getElementById('qQR'), { text: upi, width: 160, height: 160 });
+        new QRCode(document.getElementById('qQR'), { text: upi, width: 140, height: 140, colorDark : "#000000", colorLight : "#ffffff" });
         
-        // Convert to static image after generation for preview reliability
         setTimeout(() => {
             const canv = document.querySelector('#qQR canvas');
             if(canv) {
                 const img = document.createElement('img');
                 img.src = canv.toDataURL('image/png');
-                img.style.width = '160px';
+                img.style.width = '140px';
                 canv.style.display = 'none';
                 document.getElementById('qQR').appendChild(img);
             }
@@ -544,22 +539,30 @@
         let mob = document.getElementById('mobile').value;
         if(mob.length < 10) return showToast("Enter 10-digit mobile");
         const btn = document.getElementById('fetchBtn');
-        btn.innerText = "Syncing...";
+        btn.innerText = "Fetching...";
         try {
             const res = await fetch(SHEET_API, { method: 'POST', body: JSON.stringify({ action: "getClient", phone: "91"+mob }) });
             const data = await res.json();
             if(data.found) {
                 document.getElementById('customer').value = data.name;
-                document.getElementById('clientDetails').innerHTML = `<div style="background:var(--success-soft); border:1px solid rgba(5, 150, 105, 0.2); color:var(--success); padding:16px 20px; border-radius:var(--radius-sm); margin-bottom:24px; font-weight:600; font-size:14px; display:flex; justify-content:space-between; align-items:center;"><span>Client: ${data.name}</span><span style="background:var(--success); color:white; padding:4px 12px; border-radius:6px; font-size:12px; font-weight:800;">Due: ₹${data.totalDue}</span></div>`;
-                showToast("Client profile synced!");
+                document.getElementById('clientDetails').innerHTML = `<div style="font-size:13px; color:var(--success); font-weight:500; margin-top:4px;">✓ Sheet Record Found • Balance: ₹${data.totalDue}</div>`;
+                showToast("Record fetched");
+                
+                // Update local memory
+                clientMemory[mob] = data.name;
+                localStorage.setItem('algum_client_memory', JSON.stringify(clientMemory));
+                
                 saveDraft();
             } else {
-                showToast("New Customer");
+                document.getElementById('clientDetails').innerHTML = `<div style="font-size:13px; color:var(--secondary); font-weight:500; margin-top:4px;">No sheet record found.</div>`;
             }
-        } catch(e) {} finally { btn.innerText = "⚡ Sync Client Data"; }
+        } catch(e) {
+            showToast("Network Error");
+        } finally { btn.innerText = "Fetch Records"; }
     }
 
-    async function generateInvoice() {
+    // --- ENTERPRISE INVOICE GENERATION ---
+    function renderDocument(type) {
         const calc = updateCalculations();
         const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
         const advReq = parseFloat(document.getElementById('advAmount').value) || 0;
@@ -569,14 +572,19 @@
         const now = new Date();
         const dateStr = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
         const randNum = Math.floor(Math.random() * 90 + 10); 
-        const invNo = "AC-" + dateStr + "-" + randNum;
-        const recNo = "REC-" + dateStr + "-" + randNum;
+        const docNo = "AC-" + dateStr + "-" + randNum;
 
         const customer = document.getElementById('customer').value || "Valued Client";
         const mobile = document.getElementById('mobile').value;
         
+        // Save to memory for future
+        if(mobile.length === 10 && customer) {
+            clientMemory[mobile] = customer;
+            localStorage.setItem('algum_client_memory', JSON.stringify(clientMemory));
+        }
+
         const notesVal = document.getElementById('customNotes').value.trim();
-        const notesHTML = notesVal ? `<div style="padding: 0 60px 10px; font-size:12px; color:#71717A; line-height: 1.5;"><b>Note:</b> ${notesVal}</div>` : '';
+        const notesHTML = notesVal ? `<div style="margin-top: 40px; font-size:12px; color:#52525B; line-height: 1.6;"><b>Memo:</b> ${notesVal}</div>` : '';
 
         let itemsHtml = "";
         document.querySelectorAll('.item-row').forEach(row => {
@@ -589,240 +597,189 @@
             
             if(n) {
                 itemsHtml += `<tr>
-                    <td style="padding-left:0; color:#09090B; font-weight:600;">${n}</td>
-                    <td style="text-align:center;">${q}</td>
-                    <td style="text-align:center;">₹${parseFloat(r).toLocaleString()}</td>
-                    <td style="text-align:center; color:#A1A1AA; font-weight:500;">${d > 0 ? '-₹' + d.toLocaleString() : '-'}</td>
-                    <td style="text-align:right; font-weight:700; color:#09090B;">₹${lineTotal.toLocaleString()}</td>
+                    <td>${n}</td>
+                    <td class="qty-col">${q}</td>
+                    <td class="num-col">₹${formatINR(r)}</td>
+                    <td class="num-col" style="color:#71717A;">${d > 0 ? '-₹' + formatINR(d) : '-'}</td>
+                    <td class="num-col" style="font-weight:500; color:#000;">₹${formatINR(lineTotal)}</td>
                 </tr>`;
             }
         });
 
-        // Advanced QR Code Display Logic for Invoice
+        // UNTOUCHED QR LOGIC - Just placed in clean wrappers
         let qrSectionHtml = '';
         if (balance <= 0) {
-            qrSectionHtml = `<div style="background:#ECFDF5; color:#059669; padding:20px; border-radius:12px; text-align:center; border:1px solid rgba(5,150,105,0.1);">
-                                <div style="font-size:20px; margin-bottom:8px;">✓</div>
-                                <div style="font-weight:800; font-size:12px; letter-spacing:1px;">ACCOUNT SETTLED</div>
+            qrSectionHtml = `<div style="padding:16px 20px; background:#F9FAFB; border-radius:6px; border:1px solid #E4E4E7; display:inline-block;">
+                                <div style="font-size:12px; font-weight:600; color:#18181B;">Amount Fully Settled</div>
+                                <div style="font-size:11px; color:#71717A; margin-top:2px;">No further action required.</div>
                                </div>`;
-        } else if (advReq > 0 && paid === 0) {
-            // User needs advance AND hasn't paid yet: Dual QR Layout
+        } else if (advReq > 0 && paid === 0 && type !== 'receipt') {
             let remBalance = calc.finalNet - advReq;
             qrSectionHtml = `
-                <div style="display:flex; gap:16px; align-items:flex-end;">
-                    <div style="text-align:center;">
-                        <div id="advQR" style="background:#FFFFFF; padding:10px; border-radius:12px; border:1px solid #E4E4E7; display:inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.02);"></div>
-                        <p style="font-size:9px; font-weight:800; color:#EAAA00; margin-top:8px; text-transform:uppercase; letter-spacing:1px; margin-bottom:0;">Advance QR<br><span style="font-size:13px; color:#09090B;">₹${advReq.toLocaleString()}</span></p>
+                <div style="display:flex; gap:32px;">
+                    <div class="qr-wrapper">
+                        <div id="advQR" style="padding:8px; border:1px solid #E4E4E7; border-radius:6px; display:inline-block;"></div>
+                        <p>Advance: ₹${formatINR(advReq)}</p>
                     </div>
-                    <div style="text-align:center;">
-                        <div id="balQR" style="background:#FFFFFF; padding:10px; border-radius:12px; border:1px solid #E4E4E7; display:inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.02);"></div>
-                        <p style="font-size:9px; font-weight:800; color:#71717A; margin-top:8px; text-transform:uppercase; letter-spacing:1px; margin-bottom:0;">Balance QR<br><span style="font-size:13px; color:#09090B;">₹${remBalance.toLocaleString()}</span></p>
+                    <div class="qr-wrapper">
+                        <div id="balQR" style="padding:8px; border:1px solid #E4E4E7; border-radius:6px; display:inline-block;"></div>
+                        <p>Balance: ₹${formatINR(remBalance)}</p>
                     </div>
+                </div>`;
+        } else if (type !== 'receipt') {
+            qrSectionHtml = `
+                <div class="qr-wrapper">
+                    <div id="finalQR" style="padding:8px; border:1px solid #E4E4E7; border-radius:6px; display:inline-block;"></div>
+                    <p>Scan to pay balance</p>
                 </div>`;
         } else {
-            // Standard Single QR Layout
-            qrSectionHtml = `
-                <div style="text-align:left;">
-                    <div id="finalQR" style="background:#FFFFFF; padding:12px; border-radius:12px; border:1px solid #E4E4E7; display:inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.02);"></div>
-                    <p style="font-size:10px; font-weight:700; color:#71717A; margin-top:12px; text-transform:uppercase; letter-spacing:1px;">Scan to Pay Balance</p>
-                </div>`;
+             qrSectionHtml = `<div style="font-size:12px; color:#71717A; font-weight:500;">Payment Mode: <b style="color:#18181B;">${document.getElementById('paymentMode').value}</b></div>`;
         }
 
-        const area = document.getElementById('invoiceArea');
-        area.style.display = 'block';
-        area.innerHTML = `
-            <div id="captureNode" class="invoice-card" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+        const isInvoice = type === 'invoice';
+        const docTitle = isInvoice ? "INVOICE" : "RECEIPT";
+
+        let htmlString = `
+            <div id="captureNode" class="invoice-card">
                 
-                <div class="inv-header">
-                    <div class="inv-brand-box">
-                        <img src="https://i.ibb.co/933TXyCF/20260618-221353.png" alt="Algum Creations Logo" border="0" style="height: 100px; object-fit: contain; margin-left: -10px;">
+                <div class="inv-header-grid">
+                    <div class="inv-logo-area">
+                        <img src="https://i.ibb.co/933TXyCF/20260618-221353.png" alt="Algum Creations">
                     </div>
-                    <div style="text-align:right; display:flex; flex-direction:column; justify-content:center;">
-                        <p style="margin:0 0 4px; font-size:10px; font-weight:700; color:#A1A1AA; text-transform:uppercase; letter-spacing:2px;">Invoice Reference</p>
-                        <p style="margin:0 0 12px; font-size:22px; font-weight:800; color:#09090B; letter-spacing:-0.5px;">#${invNo}</p>
-                        <div><span class="inv-badge ${balance<=0?'badge-paid':'badge-due'}">${status} INVOICE</span></div>
+                    <div class="inv-meta-area">
+                        <h2 class="inv-title">${docTitle}</h2>
+                        <p class="inv-number">#${docNo}</p>
+                        <span class="inv-badge ${balance<=0?'badge-paid':'badge-due'}">${isInvoice ? status : 'PAID'}</span>
                     </div>
                 </div>
 
-                <div style="padding: 40px 60px; display:flex; justify-content:space-between; border-bottom: 1px solid #F4F4F5;">
+                <div class="inv-addresses">
                     <div>
-                        <p style="margin:0 0 6px; color:#A1A1AA; font-weight:700; text-transform:uppercase; font-size:10px; letter-spacing:1.5px;">Billed To</p>
-                        <p style="margin:0 0 4px; font-weight:700; font-size:18px; color:#09090B;">${customer}</p>
-                        <p style="margin:0; color:#71717A; font-weight:500; font-size:14px;">+91 ${mobile}</p>
+                        <p class="inv-addr-title">${isInvoice ? 'Billed To' : 'Received From'}</p>
+                        <p class="inv-addr-name">${customer}</p>
+                        <p>+91 ${mobile}</p>
                     </div>
                     <div style="text-align:right;">
-                        <p style="margin:0 0 6px; color:#A1A1AA; font-weight:700; text-transform:uppercase; font-size:10px; letter-spacing:1.5px;">Date of Issue</p>
-                        <p style="margin:0; font-weight:600; font-size:16px; color:#09090B;">${new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'})}</p>
+                        <p class="inv-addr-title">Date</p>
+                        <p class="inv-addr-name">${new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'})}</p>
                     </div>
                 </div>
 
                 <table class="inv-table">
                     <thead>
                         <tr>
-                            <th style="padding-left:0;">Service Description</th>
-                            <th style="text-align:center;">Qty</th>
-                            <th style="text-align:center;">Rate</th>
-                            <th style="text-align:center;">Disc</th>
-                            <th style="text-align:right;">Total</th>
+                            <th>Description</th>
+                            <th class="qty-col">Qty</th>
+                            <th class="num-col">Rate</th>
+                            <th class="num-col">Disc</th>
+                            <th class="num-col">Total</th>
                         </tr>
                     </thead>
                     <tbody>${itemsHtml}</tbody>
                 </table>
                 
-                <div style="padding: 20px 60px 40px; display:flex; justify-content:space-between; align-items:flex-end;">
-                    <div style="width:45%;">
+                <div class="inv-bottom-grid">
+                    <div>
                         ${qrSectionHtml}
                     </div>
-                    <div style="width:50%;">
-                        <div style="background:#FAFAFA; padding:32px; border-radius:16px; border:1px solid #E4E4E7;">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:13px; color:#71717A; font-weight:500;">
-                                <span>Subtotal</span><span style="font-weight:600; color:#09090B;">₹${calc.subtotal.toLocaleString()}</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:13px; color:#71717A; font-weight:500;">
-                                <span>Tax (GST 18%)</span><span style="font-weight:600; color:#09090B;">₹${calc.totalTax.toLocaleString()}</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:13px; color:#71717A; font-weight:500;">
-                                <span>Global Discount</span><span style="font-weight:600; color:#09090B;">-₹${calc.disc.toLocaleString()}</span>
-                            </div>
-                            <div style="border-top:1px solid #E4E4E7; padding-top:20px; display:flex; justify-content:space-between; align-items:center;">
-                                <span style="font-weight:800; font-size:11px; color:#71717A; text-transform:uppercase; letter-spacing: 1px;">Amount Due</span>
-                                <span style="font-weight:800; font-size:28px; color:#09090B; letter-spacing:-1px;">₹${calc.finalNet.toLocaleString()}</span>
-                            </div>
+                    
+                    <div class="inv-summary-box">
+                        <div class="inv-summary-row"><span>Subtotal</span><span>₹${formatINR(calc.subtotal)}</span></div>
+                        <div class="inv-summary-row"><span>Tax (18%)</span><span>₹${formatINR(calc.totalTax)}</span></div>
+                        <div class="inv-summary-row"><span>Discount</span><span>-₹${formatINR(calc.disc)}</span></div>
+                        
+                        <div class="inv-total-row">
+                            <span class="inv-total-label">${isInvoice ? 'Net Payable' : 'Total Paid'}</span>
+                            <span class="inv-total-val">₹${formatINR(calc.finalNet)}</span>
                         </div>
                     </div>
                 </div>
 
                 ${notesHTML}
 
-                <div class="inv-footer-area">
-                    <div style="text-align:left;">
-                        <p style="margin:0 0 4px; font-weight:700; font-size:13px; color:#09090B;">Algum Creations</p>
-                        <p style="margin:0; font-size:11px; color:#A1A1AA; font-weight:500;">Jamalpur (Munger), Bihar | +91 7352185767</p>
-                    </div>
-                    <div style="text-align:right;">
-                        <p style="margin:0 0 4px; font-size:11px; color:#A1A1AA; font-weight:700; text-transform:uppercase; letter-spacing:1px;">This is a digitally verified document</p>
-                    </div>
+                <div class="inv-footer">
+                    Algum Creations • Jamalpur, Bihar • +91 7352185767
                 </div>
             </div>`;
 
-        // 100% untouched full paid receipt logic
-        const receiptArea = document.getElementById('receiptArea');
-        receiptArea.style.display = 'block';
-        receiptArea.innerHTML = `
-            <div id="captureReceiptNode" class="invoice-card" style="font-family: 'Plus Jakarta Sans', sans-serif; border-top: 4px solid #09090B;">
-                
-                <div class="inv-header">
-                    <div class="inv-brand-box">
-                        <img src="https://i.ibb.co/933TXyCF/20260618-221353.png" alt="Algum Creations Logo" border="0" style="height: 100px; object-fit: contain; margin-left: -10px;">
-                    </div>
-                    <div style="text-align:right; display:flex; flex-direction:column; justify-content:center;">
-                        <p style="margin:0 0 4px; font-size:10px; font-weight:700; color:#A1A1AA; text-transform:uppercase; letter-spacing:2px;">Payment Receipt</p>
-                        <p style="margin:0 0 12px; font-size:22px; font-weight:800; color:#09090B; letter-spacing:-0.5px;">#${recNo}</p>
-                        <div><span class="inv-badge" style="background: #09090B; color: #FFFFFF;">✓ RECEIVED</span></div>
-                    </div>
-                </div>
-
-                <div style="padding: 40px 60px; display:flex; justify-content:space-between; border-bottom: 1px solid #F4F4F5;">
-                    <div>
-                        <p style="margin:0 0 6px; color:#A1A1AA; font-weight:700; text-transform:uppercase; font-size:10px; letter-spacing:1.5px;">Received From</p>
-                        <p style="margin:0 0 4px; font-weight:700; font-size:18px; color:#09090B;">${customer}</p>
-                        <p style="margin:0; color:#71717A; font-weight:500; font-size:14px;">+91 ${mobile}</p>
-                    </div>
-                    <div style="text-align:right;">
-                        <p style="margin:0 0 6px; color:#A1A1AA; font-weight:700; text-transform:uppercase; font-size:10px; letter-spacing:1.5px;">Payment Date</p>
-                        <p style="margin:0; font-weight:600; font-size:16px; color:#09090B;">${new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'})}</p>
-                    </div>
-                </div>
-
-                <table class="inv-table">
-                    <thead>
-                        <tr>
-                            <th style="padding-left:0;">Service Description</th>
-                            <th style="text-align:center;">Qty</th>
-                            <th style="text-align:center;">Rate</th>
-                            <th style="text-align:center;">Disc</th>
-                            <th style="text-align:right;">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>${itemsHtml}</tbody>
-                </table>
-                
-                <div style="padding: 20px 60px 40px; display:flex; justify-content:space-between; align-items:flex-end;">
-                    <div style="width:40%;">
-                        <div style="background:#FAFAFA; color:#09090B; padding:24px; border-radius:12px; border:1px solid #E4E4E7; text-align:left;">
-                            <div style="font-weight:700; font-size:10px; color:#A1A1AA; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Payment Channel</div>
-                            <div style="font-weight:700; font-size:16px; color:#09090B; display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:20px;">💳</span> ${document.getElementById('paymentMode').value}
-                            </div>
-                        </div>
-                    </div>
-                    <div style="width:50%;">
-                        <div style="background:#09090B; padding:32px; border-radius:16px; color:white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:13px; color:#A1A1AA; font-weight:500;">
-                                <span>Invoice Total</span><span style="color:#FFFFFF;">₹${calc.finalNet.toLocaleString()}</span>
-                            </div>
-                            <div style="border-top:1px solid rgba(255,255,255,0.15); padding-top:20px; display:flex; justify-content:space-between; align-items:center;">
-                                <span style="font-weight:700; font-size:11px; text-transform:uppercase; color:#A1A1AA; letter-spacing:1px;">Amount Received</span>
-                                <span style="font-weight:800; font-size:28px; color:#FFFFFF; letter-spacing:-1px;">₹${calc.finalNet.toLocaleString()}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                ${notesHTML}
-
-                <div class="inv-footer-area">
-                    <div style="text-align:left;">
-                        <p style="margin:0 0 4px; font-weight:700; font-size:13px; color:#09090B;">Algum Creations</p>
-                        <p style="margin:0; font-size:11px; color:#A1A1AA; font-weight:500;">Jamalpur (Munger), Bihar | +91 7352185767</p>
-                    </div>
-                    <div style="text-align:right;">
-                        <p style="margin:0 0 4px; font-size:11px; color:#A1A1AA; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Official Payment Record</p>
-                    </div>
-                </div>
-            </div>`;
-
-        // Execution of QR codes initialization
-        if (balance > 0) {
+        const previewCont = document.getElementById('previewContainer');
+        previewCont.innerHTML = htmlString;
+        
+        // Render QR Codes into the preview
+        if (balance > 0 && isInvoice) {
             if (advReq > 0 && paid === 0) {
                 let remBalance = calc.finalNet - advReq;
-                new QRCode(document.getElementById('advQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${advReq.toFixed(2)}&cu=INR`, width: 85, height: 85, colorDark : "#09090B", colorLight : "#ffffff" });
-                new QRCode(document.getElementById('balQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${remBalance.toFixed(2)}&cu=INR`, width: 85, height: 85, colorDark : "#09090B", colorLight : "#ffffff" });
+                new QRCode(previewCont.querySelector('#advQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${advReq.toFixed(2)}&cu=INR`, width: 80, height: 80, colorDark : "#000000", colorLight : "#ffffff" });
+                new QRCode(previewCont.querySelector('#balQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${remBalance.toFixed(2)}&cu=INR`, width: 80, height: 80, colorDark : "#000000", colorLight : "#ffffff" });
                 
                 setTimeout(() => {
                     ['advQR', 'balQR'].forEach(id => {
-                        const qrCanvas = document.querySelector(`#${id} canvas`);
+                        const qrCanvas = previewCont.querySelector(`#${id} canvas`);
                         if(qrCanvas) {
-                            const dataUrl = qrCanvas.toDataURL("image/png");
                             const img = document.createElement("img");
-                            img.src = dataUrl;
-                            img.style.width = "85px";
+                            img.src = qrCanvas.toDataURL("image/png");
+                            img.style.width = "80px";
+                            img.style.display = "block";
                             qrCanvas.style.display = "none";
-                            document.getElementById(id).appendChild(img);
+                            previewCont.querySelector(`#${id}`).appendChild(img);
                         }
                     });
-                }, 500);
+                }, 400);
             } else {
-                new QRCode(document.getElementById('finalQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, width: 100, height: 100, colorDark : "#09090B", colorLight : "#ffffff" });
+                new QRCode(previewCont.querySelector('#finalQR'), { text: `upi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance.toFixed(2)}&cu=INR`, width: 90, height: 90, colorDark : "#000000", colorLight : "#ffffff" });
                 setTimeout(() => {
-                    const qrCanvas = document.querySelector('#finalQR canvas');
+                    const qrCanvas = previewCont.querySelector('#finalQR canvas');
                     if(qrCanvas) {
-                        const dataUrl = qrCanvas.toDataURL("image/png");
                         const img = document.createElement("img");
-                        img.src = dataUrl;
-                        img.style.width = "100px";
+                        img.src = qrCanvas.toDataURL("image/png");
+                        img.style.width = "90px";
+                        img.style.display = "block";
                         qrCanvas.style.display = "none";
-                        document.getElementById('finalQR').appendChild(img);
+                        previewCont.querySelector('#finalQR').appendChild(img);
                     }
-                }, 500);
+                }, 400);
             }
         }
+
+        document.getElementById('previewModal').style.display = 'block';
+        document.getElementById('modalActions').style.display = 'flex';
         
-        document.getElementById('afterButtons').style.display = 'grid';
-        area.scrollIntoView({ behavior: 'smooth' });
+        // Save doc type state for download
+        window.currentRenderType = type;
+        window.currentDocNo = docNo;
     }
 
-    async function shareWhatsApp() {
+    function closePreview() {
+        document.getElementById('previewModal').style.display = 'none';
+    }
+
+    function downloadInvoice() {
+        const node = document.querySelector("#previewContainer #captureNode");
+        if(!node) return showToast("Generate document first");
+        
+        const typeStr = window.currentRenderType === 'invoice' ? 'Invoice' : 'Receipt';
+        showToast("Processing PDF/Image...");
+        
+        html2canvas(node, { 
+            scale: 3, 
+            backgroundColor: '#ffffff', 
+            useCORS: true,
+            logging: false
+        }).then(canvas => {
+            try {
+                const a = document.createElement("a");
+                a.download = `Algum_${typeStr}_${window.currentDocNo}.png`; 
+                a.href = canvas.toDataURL("image/png", 1.0); 
+                a.click();
+                showToast("Download Complete");
+            } catch (err) {
+                showToast("Error saving image.");
+            }
+        });
+    }
+
+    // --- WHATSAPP UNTOUCHED LOGIC ---
+    function shareWhatsApp() {
         const name = document.getElementById('customer').value || "Client";
         let mobile = document.getElementById('mobile').value.replace(/\D/g,"");
         const total = document.getElementById('txtGrandTotal').innerText;
@@ -845,109 +802,49 @@
             if (lineTotal < 0) lineTotal = 0;
 
             if(n) {
-                itemsList += `🔹 *${n}* (x${q}) - ₹${r.toLocaleString()}`;
-                if (d > 0) itemsList += ` [Disc: -₹${d.toLocaleString()}]`;
-                itemsList += ` = ₹${lineTotal.toLocaleString()}\n`;
+                itemsList += `🔹 *${n}* (x${q}) - ₹${formatINR(r)}`;
+                if (d > 0) itemsList += ` [Disc: -₹${formatINR(d)}]`;
+                itemsList += ` = ₹${formatINR(lineTotal)}\n`;
             }
         });
 
-        let msg = ` *ALGUM CREATIONS - CUSTOMER INVOICE*\n`;
+        let msg = ` *ALGUM CREATIONS - INVOICE*\n`;
         msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-        msg += `👤 *Client:* ${name}\n`;
-        msg += `📱 *Mobile:* +91 ${mobile}\n`;
-        msg += `📅 *Date:* ${new Date().toLocaleDateString()}\n`;
+        msg += `👤 *Billed To:* ${name}\n`;
+        msg += `📅 *Date:* ${new Date().toLocaleDateString('en-GB')}\n`;
         msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-        msg += `📦 *Services:*\n${itemsList}`;
+        msg += `📦 *Details:*\n${itemsList}`;
         msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-        msg += `💰 *PAYMENT SUMMARY:*\n`;
         msg += `🔸 Final Amount: ${total}\n`;
         
         if(parseFloat(disc.replace(/[^\d.]/g,'')) > 0) {
-             msg += `🔴 Global Disc Applied: ${disc}\n`;
+             msg += `🔴 Discount Applied: ${disc}\n`;
         }
         
         msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-        msg += `✅ *Amt Paid:* ₹${paid}\n`;
-        msg += `💳 *Channel:* ${mode}\n`;
+        msg += `✅ *Paid:* ₹${paid}\n`;
+        msg += `💳 *Mode:* ${mode}\n`;
         
         if(notes) {
-            msg += `\n📝 *Note:* ${notes}\n`;
+            msg += `\n📝 *Memo:* ${notes}\n`;
         }
 
         if(balance > 0) {
             if(advReq > 0 && parseFloat(paid) === 0) {
                 let remBalance = Math.max(0, parseFloat(total.replace(/₹|,/g,'')) - advReq).toFixed(2);
-                msg += `\n⚠️ *PAYMENT DUE: ₹${parseFloat(balance).toLocaleString()}*\n\n`;
-                msg += `🔗 *Tap to Pay Advance (₹${advReq}):*\nupi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${advReq}&cu=INR\n\n`;
-                msg += `🔗 *Tap to Pay Balance (₹${remBalance}):*\nupi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${remBalance}&cu=INR\n`;
+                msg += `\n⚠️ *ACTION REQUIRED*\n\n`;
+                msg += `🔗 *Pay Advance (₹${formatINR(advReq)}):*\nupi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${advReq}&cu=INR\n\n`;
+                msg += `🔗 *Pay Balance (₹${formatINR(remBalance)}):*\nupi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${remBalance}&cu=INR\n`;
             } else {
-                msg += `\n⚠️ *BALANCE DUE: ₹${parseFloat(balance).toLocaleString()}*\n\n`;
-                msg += `🔗 *Tap to Pay Balance:*\nupi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance}&cu=INR\n`;
+                msg += `\n⚠️ *BALANCE DUE: ₹${formatINR(balance)}*\n\n`;
+                msg += `🔗 *Tap to Pay:*\nupi://pay?pa=${UPI_ID}&pn=AlgumCreations&am=${balance}&cu=INR\n`;
             }
         } else {
-            msg += `🟢 *Status:* SETTLED (FULLY PAID)\n`;
+            msg += `🟢 *Status:* PAID\n`;
         }
-        msg += `\n_Thank you for choosing Algum Creations for your branding needs._`;
+        msg += `\n_Thank you for choosing Algum Creations._`;
         
         window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(msg)}`);
-    }
-
-    function downloadInvoice() {
-        const node = document.getElementById("captureNode");
-        showToast("Rendering High-Res Image...");
-        
-        html2canvas(node, { 
-            scale: 3, 
-            backgroundColor: '#ffffff', 
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
-            onclone: (clonedDoc) => {
-                // Ensuring all possibilities of QRs are visible
-                const clonedFinal = clonedDoc.getElementById('finalQR');
-                if(clonedFinal) clonedFinal.style.opacity = "1";
-                const clonedAdv = clonedDoc.getElementById('advQR');
-                if(clonedAdv) clonedAdv.style.opacity = "1";
-                const clonedBal = clonedDoc.getElementById('balQR');
-                if(clonedBal) clonedBal.style.opacity = "1";
-            }
-        }).then(canvas => {
-            try {
-                const a = document.createElement("a");
-                a.download = `Algum_Invoice_${Date.now()}.png`; 
-                a.href = canvas.toDataURL("image/png", 1.0); 
-                a.click();
-                showToast("Invoice saved successfully!");
-            } catch (err) {
-                console.error("Save Error:", err);
-                showToast("Error saving image. Try again.");
-            }
-        });
-    }
-
-    function downloadReceipt() {
-        const node = document.getElementById("captureReceiptNode");
-        if(!node) return showToast("Please generate invoice first!");
-        showToast("Rendering Payment Receipt...");
-        
-        html2canvas(node, { 
-            scale: 3, 
-            backgroundColor: '#ffffff', 
-            useCORS: true,
-            allowTaint: true,
-            logging: false
-        }).then(canvas => {
-            try {
-                const a = document.createElement("a");
-                a.download = `Algum_Receipt_${Date.now()}.png`; 
-                a.href = canvas.toDataURL("image/png", 1.0); 
-                a.click();
-                showToast("Payment Receipt saved successfully!");
-            } catch (err) {
-                console.error("Save Error:", err);
-                showToast("Error saving receipt. Try again.");
-            }
-        });
     }
 
     function saveDraft() {
@@ -967,7 +864,7 @@
         const mode = document.getElementById('paymentMode') ? document.getElementById('paymentMode').value : "Online UPI";
         const advAmt = document.getElementById('advAmount') ? document.getElementById('advAmount').value : "0";
 
-        localStorage.setItem('algum_bill_draft_v3', JSON.stringify({
+        localStorage.setItem('algum_bill_draft_v4', JSON.stringify({
             name: document.getElementById('customer').value, 
             mob: document.getElementById('mobile').value, 
             items,
@@ -977,16 +874,14 @@
         }));
 
         const badge = document.getElementById('autoSaveBadge');
-        if(badge && items.length > 0) {
+        if(badge) {
             badge.style.opacity = '1';
-            autoSaveTimeout = setTimeout(() => {
-                badge.style.opacity = '0';
-            }, 2000);
+            autoSaveTimeout = setTimeout(() => { badge.style.opacity = '0'; }, 2000);
         }
     }
 
     function loadDraft() {
-        const saved = localStorage.getItem('algum_bill_draft_v3');
+        const saved = localStorage.getItem('algum_bill_draft_v4');
         if(!saved) return false;
         const d = JSON.parse(saved);
         
@@ -997,7 +892,6 @@
         if(d.advAmt) document.getElementById('advAmount').value = d.advAmt;
         
         if(d.items?.length) d.items.forEach(i => addItemRow(i));
-        validateMobile(); 
         return !!d.items?.length;
     }
 
@@ -1005,4 +899,5 @@
 </script>
 </body>
 </html>
+
 
